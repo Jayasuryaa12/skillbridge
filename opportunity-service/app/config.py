@@ -9,6 +9,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def parse_cors_origins() -> list[str]:
+    """Parse ALLOWED_ORIGINS (or fallback CORS_ORIGINS) into a list."""
+    raw = os.getenv("ALLOWED_ORIGINS") or os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
+    if not raw or raw.strip() == "*":
+        return ["*"]
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+
 class Config:
     """Base configuration shared by all environments."""
 
@@ -24,9 +32,8 @@ class Config:
     DB_NAME: str = os.getenv("DB_NAME", "opportunity_db")
 
     # ── CORS ───────────────────────────────────────────────────────────────
-    CORS_ORIGINS: list[str] = os.getenv(
-        "CORS_ORIGINS", "http://localhost:5173,http://localhost:3000"
-    ).split(",")
+    ALLOWED_ORIGINS: list[str] = parse_cors_origins()
+    CORS_ORIGINS: list[str] = ALLOWED_ORIGINS  # Backwards compatibility
 
     # ── Inter-Service Security ─────────────────────────────────────────────
     INTER_SERVICE_KEY: str | None = os.getenv("INTER_SERVICE_KEY", None)
@@ -42,6 +49,7 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG: bool = False
+    TESTING: bool = False
 
 
 class TestingConfig(Config):

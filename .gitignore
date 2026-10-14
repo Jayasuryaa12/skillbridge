@@ -35,7 +35,11 @@ htmlcov/
 # Node (frontend)
 node_modules/
 dist/
+frontend/dist/
 .pnpm-store/
+
+# Scratch & Temporary
+scratch/
 
 # MongoDB
 *.lock

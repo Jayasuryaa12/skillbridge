@@ -61,6 +61,7 @@ def _get_student_and_career(db, student_id: str, career_id: str | None = None):
 # ══════════════════════════════════════════════════════════════════════════════
 
 @roadmaps_bp.post("/students/<student_id>/roadmap/generate")
+@roadmaps_bp.post("/students/<student_id>/roadmap")
 def generate_student_roadmap(student_id: str):
     """
     POST /api/students/<id>/roadmap/generate
@@ -150,6 +151,7 @@ def get_student_roadmap(student_id: str):
 
 
 @roadmaps_bp.patch("/students/<student_id>/roadmap/stages/<int:order>")
+@roadmaps_bp.put("/students/<student_id>/roadmap/stages/<int:order>")
 def update_stage_status(student_id: str, order: int):
     """
     PATCH /api/students/<id>/roadmap/stages/<order>

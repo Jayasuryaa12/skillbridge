@@ -42,11 +42,13 @@ def init_db(app: Flask) -> None:
             db: Database = client[app.config["DB_NAME"]]
 
             # ── opportunities ─────────────────────────────────────────────
-            db.opportunities.create_index(
-                [("title", TEXT), ("description", TEXT), ("organization", TEXT)],
-                background=True,
-                name="idx_opportunity_text_search",
-            )
+            try:
+                db.opportunities.create_index(
+                    [("title", TEXT), ("description", TEXT), ("organization", TEXT)],
+                    background=True,
+                )
+            except Exception:
+                pass
             db.opportunities.create_index([("type", ASCENDING)], background=True)
             db.opportunities.create_index([("difficulty", ASCENDING)], background=True)
             db.opportunities.create_index([("mode", ASCENDING)], background=True)

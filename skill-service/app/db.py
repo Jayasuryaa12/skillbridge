@@ -54,36 +54,29 @@ def init_db(app: Flask) -> None:
             db: Database = client[app.config["DB_NAME"]]
 
             # ── students ──────────────────────────────────────────────────
-            db.students.create_index(
-                [("email", ASCENDING)], unique=True, background=True, name="idx_student_email_unique"
-            )
-            db.students.create_index(
-                [("name", TEXT), ("college", TEXT), ("department", TEXT)],
-                background=True,
-                name="idx_student_text_search",
-            )
+            try:
+                db.students.create_index([("email", ASCENDING)], unique=True, background=True)
+                db.students.create_index([("name", TEXT), ("college", TEXT), ("department", TEXT)], background=True)
+            except Exception:
+                pass
             db.students.create_index([("career_goal", ASCENDING)], background=True)
             db.students.create_index([("year", ASCENDING)], background=True)
 
             # ── careers ───────────────────────────────────────────────────
-            db.careers.create_index(
-                [("slug", ASCENDING)], unique=True, background=True, name="idx_career_slug_unique"
-            )
-            db.careers.create_index(
-                [("title", TEXT), ("description", TEXT)],
-                background=True,
-                name="idx_career_text_search",
-            )
+            try:
+                db.careers.create_index([("slug", ASCENDING)], unique=True, background=True)
+                db.careers.create_index([("title", TEXT), ("description", TEXT)], background=True)
+            except Exception:
+                pass
             db.careers.create_index([("category", ASCENDING)], background=True)
 
             # ── roadmaps ──────────────────────────────────────────────────
             db.roadmaps.create_index([("student_id", ASCENDING)], background=True)
             db.roadmaps.create_index([("career_id", ASCENDING)], background=True)
-            db.roadmaps.create_index(
-                [("student_id", ASCENDING), ("career_id", ASCENDING)],
-                background=True,
-                name="idx_roadmap_student_career",
-            )
+            try:
+                db.roadmaps.create_index([("student_id", ASCENDING), ("career_id", ASCENDING)], background=True)
+            except Exception:
+                pass
 
             client.close()
             logger.info("✅ MongoDB indexes created for skill_db")

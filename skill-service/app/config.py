@@ -9,6 +9,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def parse_cors_origins() -> list[str]:
+    """Parse ALLOWED_ORIGINS (or fallback CORS_ORIGINS) into a list."""
+    raw = os.getenv("ALLOWED_ORIGINS") or os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
+    if not raw or raw.strip() == "*":
+        return ["*"]
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+
 class Config:
     """Base configuration shared by all environments."""
 
@@ -24,13 +32,14 @@ class Config:
     DB_NAME: str = os.getenv("DB_NAME", "skill_db")
 
     # ── CORS ───────────────────────────────────────────────────────────────
-    CORS_ORIGINS: list[str] = os.getenv(
-        "CORS_ORIGINS", "http://localhost:5173,http://localhost:3000"
-    ).split(",")
+    ALLOWED_ORIGINS: list[str] = parse_cors_origins()
+    CORS_ORIGINS: list[str] = ALLOWED_ORIGINS  # Backwards compatibility
 
     # ── Inter-Service Integration ──────────────────────────────────────────
     OPPORTUNITY_SERVICE_URL: str = os.getenv("OPPORTUNITY_SERVICE_URL", "http://localhost:5002")
     INTER_SERVICE_KEY: str | None = os.getenv("INTER_SERVICE_KEY", None)
+    OPPORTUNITY_CONNECT_TIMEOUT: float = float(os.getenv("OPPORTUNITY_CONNECT_TIMEOUT", "15.0"))
+    OPPORTUNITY_READ_TIMEOUT: float = float(os.getenv("OPPORTUNITY_READ_TIMEOUT", "25.0"))
 
     # ── Pagination ─────────────────────────────────────────────────────────
     DEFAULT_PAGE_SIZE: int = int(os.getenv("DEFAULT_PAGE_SIZE", "20"))
@@ -44,9 +53,10 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    """Production environment — debug off, stricter settings."""
+    """Production environment — debug off, strict production settings."""
 
     DEBUG: bool = False
+    TESTING: bool = False
 
 
 class TestingConfig(Config):
@@ -54,7 +64,6 @@ class TestingConfig(Config):
 
     TESTING: bool = True
     DEBUG: bool = True
-    # Tests will be run against mongomock; URI is irrelevant but kept for clarity
     MONGO_URI: str = os.getenv(
         "TEST_MONGO_URI", "mongodb://localhost:27017/skill_db_test"
     )

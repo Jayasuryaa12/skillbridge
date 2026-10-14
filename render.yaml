@@ -1,0 +1,56 @@
+services:
+  # ── Opportunity Service (Deploy first) ──────────────────────────────────────
+  - type: web
+    name: skillbridge-opportunity-service
+    runtime: python
+    rootDir: opportunity-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn "app:create_app()" --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /health
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: DB_NAME
+        value: opportunity_db
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: INTER_SERVICE_KEY
+        generateValue: true
+
+  # ── Skill Service (Integrates with Opportunity Service) ─────────────────────
+  - type: web
+    name: skillbridge-skill-service
+    runtime: python
+    rootDir: skill-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn "app:create_app()" --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /health
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: DB_NAME
+        value: skill_db
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: OPPORTUNITY_SERVICE_URL
+        fromService:
+          type: web
+          name: skillbridge-opportunity-service
+          property: host
+      - key: INTER_SERVICE_KEY
+        fromService:
+          type: web
+          name: skillbridge-opportunity-service
+          envVarKey: INTER_SERVICE_KEY
+      - key: OPPORTUNITY_CONNECT_TIMEOUT
+        value: "20.0"
+      - key: OPPORTUNITY_READ_TIMEOUT
+        value: "30.0"
+      - key: COLD_START_TIMEOUT
+        value: "45.0"

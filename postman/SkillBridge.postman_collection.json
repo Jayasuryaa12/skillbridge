@@ -1,360 +1,121 @@
 {
   "info": {
-    "_postman_id": "e9a0c28e-5f4b-4b2a-89a7-9f4492bfd60a",
-    "name": "SkillBridge API Collection (Phase 1)",
-    "description": "Comprehensive Postman collection for SkillBridge Backend Microservices:\n- Skill Service (Port 5001)\n- Opportunity Service (Port 5002)",
+    "_postman_id": "skillbridge-microservices-v1-collection",
+    "name": "SkillBridge Microservices API Collection",
+    "description": "Comprehensive Postman collection for SkillBridge platform covering Skill Service (port 5001) and Opportunity Service (port 5002), including end-to-end integration workflows, schema validations, and error test cases.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Skill Service (Port 5001)",
+      "name": "1. Health & System Status",
       "item": [
         {
-          "name": "Health",
-          "item": [
+          "name": "Skill Service Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/health",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "event": [
             {
-              "name": "Health Check",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/health",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "health"]
-                }
-              }
-            },
-            {
-              "name": "System Status (Inter-Service Reachability)",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/system/status",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "system", "status"]
-                }
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
               }
             }
           ]
         },
         {
-          "name": "Students",
-          "item": [
-            {
-              "name": "List Students",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students?page=1&page_size=20",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students"],
-                  "query": [
-                    { "key": "page", "value": "1" },
-                    { "key": "page_size", "value": "20" }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "List Students (Filtered)",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students?department=Computer Science&year=3",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students"],
-                  "query": [
-                    { "key": "department", "value": "Computer Science" },
-                    { "key": "year", "value": "3" }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Create Student",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "var jsonData = pm.response.json();",
-                      "if (jsonData.success && jsonData.data._id) {",
-                      "    pm.environment.set('student_id', jsonData.data._id);",
-                      "}"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
+          "name": "Opportunity Service Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{opportunity_service_url}}/health",
+              "host": [
+                "{{opportunity_service_url}}"
               ],
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"Rahul Verma\",\n  \"email\": \"rahul.verma@example.com\",\n  \"college\": \"IIT Delhi\",\n  \"department\": \"Computer Science\",\n  \"year\": 3,\n  \"skills\": [\n    { \"name\": \"python\", \"level\": 3 },\n    { \"name\": \"sql\", \"level\": 2 }\n  ]\n}"
-                },
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students"]
-                }
-              }
-            },
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "event": [
             {
-              "name": "Get Student by ID",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}"]
-                }
-              }
-            },
-            {
-              "name": "Update Student Profile",
-              "request": {
-                "method": "PUT",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"year\": 4,\n  \"college\": \"IIT Bombay\"\n}"
-                },
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}"]
-                }
-              }
-            },
-            {
-              "name": "Delete Student",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}"]
-                }
-              }
-            },
-            {
-              "name": "Add Skill to Student",
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"docker\",\n  \"level\": 2\n}"
-                },
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "skills"]
-                }
-              }
-            },
-            {
-              "name": "Update Student Skill",
-              "request": {
-                "method": "PUT",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"level\": 4\n}"
-                },
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills/docker",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "skills", "docker"]
-                }
-              }
-            },
-            {
-              "name": "Delete Student Skill",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills/docker",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "skills", "docker"]
-                }
-              }
-            },
-            {
-              "name": "Analyze Skill Gap",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skill-gap",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "skill-gap"]
-                }
-              }
-            },
-            {
-              "name": "Generate Roadmap",
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap/generate",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "roadmap", "generate"]
-                }
-              }
-            },
-            {
-              "name": "Get Student Roadmap",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "roadmap"]
-                }
-              }
-            },
-            {
-              "name": "Update Roadmap Stage Status",
-              "request": {
-                "method": "PATCH",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"status\": \"in_progress\"\n}"
-                },
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap/stages/1",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "roadmap", "stages", "1"]
-                }
-              }
-            },
-            {
-              "name": "Get Student Recommendations (Inter-Service)",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/recommendations?limit=10",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "recommendations"],
-                  "query": [
-                    { "key": "limit", "value": "10" }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Get Student Dashboard (Unified Aggregation)",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/dashboard",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "students", "{{student_id}}", "dashboard"]
-                }
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
               }
             }
           ]
         },
         {
-          "name": "Careers",
-          "item": [
-            {
-              "name": "List Careers",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/careers?page=1&page_size=10",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "careers"],
-                  "query": [
-                    { "key": "page", "value": "1" },
-                    { "key": "page_size", "value": "10" }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Create Career",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "var jsonData = pm.response.json();",
-                      "if (jsonData.success && jsonData.data._id) {",
-                      "    pm.environment.set('career_id', jsonData.data._id);",
-                      "}"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
+          "name": "Composite System Status (Inter-Service)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/system/status",
+              "host": [
+                "{{skill_service_url}}"
               ],
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"title\": \"Data Platform Engineer\",\n  \"description\": \"Designs and builds distributed big data streaming architectures.\",\n  \"category\": \"Data Engineering\",\n  \"required_skills\": [\n    {\n      \"name\": \"python\",\n      \"required_level\": 4,\n      \"importance\": 5,\n      \"prerequisites\": [],\n      \"category\": \"Programming\"\n    },\n    {\n      \"name\": \"apache-spark\",\n      \"required_level\": 3,\n      \"importance\": 4,\n      \"prerequisites\": [\"python\"],\n      \"category\": \"Big Data\"\n    }\n  ]\n}"
-                },
-                "url": {
-                  "raw": "{{skill_service_url}}/api/careers",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "careers"]
-                }
-              }
-            },
+              "path": [
+                "api",
+                "system",
+                "status"
+              ]
+            }
+          },
+          "event": [
             {
-              "name": "Get Career by ID",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/careers/{{career_id}}",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "careers", "{{career_id}}"]
-                }
-              }
-            },
-            {
-              "name": "Update Career",
-              "request": {
-                "method": "PUT",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"description\": \"Updated description for high-throughput streaming systems.\"\n}"
-                },
-                "url": {
-                  "raw": "{{skill_service_url}}/api/careers/{{career_id}}",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "careers", "{{career_id}}"]
-                }
-              }
-            },
-            {
-              "name": "Delete Career",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{skill_service_url}}/api/careers/{{career_id}}",
-                  "host": ["{{skill_service_url}}"],
-                  "path": ["api", "careers", "{{career_id}}"]
-                }
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});",
+                  "pm.test('Opportunity service is reported reachable', function () {",
+                  "    const data = pm.response.json().data;",
+                  "    pm.expect(data.opportunity_service.reachable).to.be.true;",
+                  "});"
+                ]
               }
             }
           ]
@@ -362,157 +123,1347 @@
       ]
     },
     {
-      "name": "Opportunity Service (Port 5002)",
+      "name": "2. Students Management",
       "item": [
         {
-          "name": "Health",
-          "item": [
-            {
-              "name": "Health Check",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/health",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "health"]
+          "name": "List Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students?page=1&limit=20",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
                 }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});",
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.length > 0) {",
+                  "    pm.environment.set('student_id', res.data[0]._id);",
+                  "}"
+                ]
               }
             }
           ]
         },
         {
-          "name": "Opportunities",
-          "item": [
-            {
-              "name": "List Opportunities",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities?page=1&page_size=20",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities"],
-                  "query": [
-                    { "key": "page", "value": "1" },
-                    { "key": "page_size", "value": "20" }
-                  ]
-                }
+          "name": "Create Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Student\",\n  \"email\": \"postman_student_{{$timestamp}}@college.edu\",\n  \"college\": \"MIT Engineering\",\n  \"department\": \"Computer Science\",\n  \"year\": 3,\n  \"skills\": [\n    {\n      \"name\": \"Python\",\n      \"level\": 3\n    },\n    {\n      \"name\": \"SQL\",\n      \"level\": 2\n    }\n  ]\n}"
             },
-            {
-              "name": "List Opportunities (Filtered)",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities?type=internship&difficulty=intermediate&mode=hybrid",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities"],
-                  "query": [
-                    { "key": "type", "value": "internship" },
-                    { "key": "difficulty", "value": "intermediate" },
-                    { "key": "mode", "value": "hybrid" }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Get Opportunity Stats",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities/stats",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities", "stats"]
-                }
-              }
-            },
-            {
-              "name": "Match Opportunities (Inter-Service Scoring)",
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"skills\": [\n    { \"name\": \"Python\", \"level\": 3 }\n  ],\n  \"missing_skills\": [\"Docker\"],\n  \"developing_skills\": [\"SQL\"],\n  \"limit\": 10,\n  \"types\": [\"internship\", \"project\"]\n}"
-                },
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities/match",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities", "match"]
-                }
-              }
-            },
-            {
-              "name": "Create Opportunity",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "var jsonData = pm.response.json();",
-                      "if (jsonData.success && jsonData.data._id) {",
-                      "    pm.environment.set('opportunity_id', jsonData.data._id);",
-                      "}"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
+            "url": {
+              "raw": "{{skill_service_url}}/api/students",
+              "host": [
+                "{{skill_service_url}}"
               ],
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"title\": \"Cloud Infrastructure Trainee\",\n  \"type\": \"internship\",\n  \"organization\": \"CloudScale Corp\",\n  \"description\": \"Assist in managing multi-region Kubernetes clusters and Terraform modules.\",\n  \"required_skills\": [\n    { \"name\": \"docker\", \"min_level\": 2 },\n    { \"name\": \"linux\", \"min_level\": 3 }\n  ],\n  \"difficulty\": \"intermediate\",\n  \"mode\": \"online\",\n  \"apply_url\": \"https://cloudscale.example.com/apply\",\n  \"tags\": [\"devops\", \"kubernetes\", \"docker\"],\n  \"status\": \"open\"\n}"
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 201`, function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});",
+                  "const res = pm.response.json();",
+                  "pm.environment.set('created_student_id', res.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Student by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department\": \"Information Science\",\n  \"year\": 4\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Student (Cleanup)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{created_student_id}}",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{created_student_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Student Skills",
+      "item": [
+        {
+          "name": "Get Student Skills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "skills"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Add Skill to Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Docker\",\n  \"level\": 2\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "skills"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Student Skill Level",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": 4\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills/Docker",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "skills",
+                "Docker"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Student Skill",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills/Docker",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "skills",
+                "Docker"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Careers Catalog",
+      "item": [
+        {
+          "name": "List Careers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/careers",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "careers"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});",
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.length > 0) {",
+                  "    pm.environment.set('career_id', res.data[0]._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Career by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/careers/{{career_id}}",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "careers",
+                "{{career_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Gap Analysis & Goal Setting",
+      "item": [
+        {
+          "name": "Set Career Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"career_id\": \"{{career_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/career-goal",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "career-goal"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Run Skill Gap Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/skill-gap",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "skill-gap"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});",
+                  "const d = pm.response.json().data;",
+                  "pm.test('Gap analysis returns readiness score', function () {",
+                  "    pm.expect(d).to.have.property('readiness_score');",
+                  "    pm.expect(d).to.have.property('matched_skills');",
+                  "    pm.expect(d).to.have.property('missing_skills');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6. Learning Roadmap",
+      "item": [
+        {
+          "name": "Generate Learning Roadmap",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "roadmap"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 201`, function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Student Roadmap",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "roadmap"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Roadmap Stage Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\"\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap/stages/1",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "roadmap",
+                "stages",
+                "1"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "7. Opportunities Catalog",
+      "item": [
+        {
+          "name": "List Opportunities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{opportunity_service_url}}/api/opportunities?page=1&limit=10",
+              "host": [
+                "{{opportunity_service_url}}"
+              ],
+              "path": [
+                "api",
+                "opportunities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
                 },
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities"]
+                {
+                  "key": "limit",
+                  "value": "10"
                 }
-              }
-            },
+              ]
+            }
+          },
+          "event": [
             {
-              "name": "Get Opportunity by ID",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities/{{opportunity_id}}",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities", "{{opportunity_id}}"]
-                }
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});",
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.length > 0) {",
+                  "    pm.environment.set('opportunity_id', res.data[0]._id);",
+                  "}"
+                ]
               }
-            },
+            }
+          ]
+        },
+        {
+          "name": "Get Opportunity by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{opportunity_service_url}}/api/opportunities/{{opportunity_id}}",
+              "host": [
+                "{{opportunity_service_url}}"
+              ],
+              "path": [
+                "api",
+                "opportunities",
+                "{{opportunity_id}}"
+              ]
+            }
+          },
+          "event": [
             {
-              "name": "Update Opportunity",
-              "request": {
-                "method": "PUT",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"status\": \"closed\",\n  \"stipend\": \"₹40,000 / month\"\n}"
-                },
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities/{{opportunity_id}}",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities", "{{opportunity_id}}"]
-                }
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
               }
-            },
+            }
+          ]
+        },
+        {
+          "name": "Get Opportunity Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{opportunity_service_url}}/api/opportunities/stats",
+              "host": [
+                "{{opportunity_service_url}}"
+              ],
+              "path": [
+                "api",
+                "opportunities",
+                "stats"
+              ]
+            }
+          },
+          "event": [
             {
-              "name": "Delete Opportunity",
-              "request": {
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{opportunity_service_url}}/api/opportunities/{{opportunity_id}}",
-                  "host": ["{{opportunity_service_url}}"],
-                  "path": ["api", "opportunities", "{{opportunity_id}}"]
-                }
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "8. Inter-Service & Recommendations",
+      "item": [
+        {
+          "name": "Match Opportunities Algorithm (Direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Service-Key",
+                "value": "{{inter_service_key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Python\",\n      \"level\": 3\n    },\n    {\n      \"name\": \"SQL\",\n      \"level\": 2\n    }\n  ],\n  \"missing_skills\": [\n    \"Docker\",\n    \"Kubernetes\"\n  ],\n  \"developing_skills\": [\n    \"FastAPI\"\n  ],\n  \"limit\": 5\n}"
+            },
+            "url": {
+              "raw": "{{opportunity_service_url}}/api/opportunities/match",
+              "host": [
+                "{{opportunity_service_url}}"
+              ],
+              "path": [
+                "api",
+                "opportunities",
+                "match"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Student Matched Recommendations (Composite)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/recommendations",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "recommendations"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Student Dashboard Composite Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{student_id}}/dashboard",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{student_id}}",
+                "dashboard"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 200`, function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});",
+                  "const d = pm.response.json().data;",
+                  "pm.test('Dashboard includes composite metrics', function () {",
+                  "    pm.expect(d).to.have.property('readiness_score');",
+                  "    pm.expect(d).to.have.property('top_recommendations');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "9. Error Cases & Validations",
+      "item": [
+        {
+          "name": "Validation Error (422 Missing Name)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bad_req@test.com\",\n  \"year\": 10\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 422`, function () {",
+                  "    pm.response.to.have.status(422);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Not Found (404 Invalid Student ID)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/507f1f77bcf86cd799439011",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "507f1f77bcf86cd799439011"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 404`, function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Malformed ID (400 Bad Format)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/invalid-mongo-id-xyz",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "invalid-mongo-id-xyz"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(`Status code is 400`, function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});",
+                  "pm.test('Standard JSON envelope format', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('success');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "10. Full Workflow (End-to-End)",
+      "item": [
+        {
+          "name": "Step 1: Create Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Workflow Student\",\n  \"email\": \"workflow_{{$timestamp}}@college.edu\",\n  \"college\": \"Stanford Tech\",\n  \"department\": \"Computer Science\",\n  \"year\": 2,\n  \"skills\": [\n    {\n      \"name\": \"Python\",\n      \"level\": 2\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));",
+                  "const res = pm.response.json();",
+                  "pm.environment.set('wf_student_id', res.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 2: Add Skill (SQL Lv. 3)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"SQL\",\n  \"level\": 3\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{wf_student_id}}/skills",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{wf_student_id}}",
+                "skills"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200/201', () => pm.response.to.be.oneOf([200, 201]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 3: Set Career Goal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"career_id\": \"{{career_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{wf_student_id}}/career-goal",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{wf_student_id}}",
+                "career-goal"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 4: Analyze Skill Gap",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{wf_student_id}}/skill-gap",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{wf_student_id}}",
+                "skill-gap"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 5: Generate Roadmap",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{wf_student_id}}/roadmap",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{wf_student_id}}",
+                "roadmap"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200/201', () => pm.response.to.be.oneOf([200, 201]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 6: Get Recommendations (Inter-Service)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{wf_student_id}}/recommendations",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{wf_student_id}}",
+                "recommendations"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 7: Clean Up (Delete Student)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{skill_service_url}}/api/students/{{wf_student_id}}",
+              "host": [
+                "{{skill_service_url}}"
+              ],
+              "path": [
+                "api",
+                "students",
+                "{{wf_student_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
               }
             }
           ]

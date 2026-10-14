@@ -147,3 +147,13 @@ def test_opportunity_stats(client, sample_opportunity):
     assert "by_mode" in stats
     assert "by_status" in stats
     assert stats["by_type"].get("internship", 0) >= 1
+
+
+def test_health_check(client):
+    res1 = client.get("/api/health")
+    assert res1.status_code == 200
+    assert res1.get_json()["data"]["service"] == "opportunity-service"
+
+    res2 = client.get("/health")
+    assert res2.status_code == 200
+    assert res2.get_json()["data"]["database"] == "connected"

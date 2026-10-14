@@ -21,14 +21,17 @@ def create_app(config_class: Optional[type[Config]] = None) -> Flask:
         config_class = get_config()
     app.config.from_object(config_class)
 
+    log_format = "%(asctime)s [%(levelname)s] %(name)s [service=opportunity-service]: %(message)s"
     logging.basicConfig(
-        level=logging.DEBUG if app.config["DEBUG"] else logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        level=logging.DEBUG if app.config.get("DEBUG") else logging.INFO,
+        format=log_format,
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
+    allowed_origins = app.config.get("ALLOWED_ORIGINS", app.config.get("CORS_ORIGINS", ["*"]))
     CORS(
         app,
-        resources={r"/api/*": {"origins": app.config["CORS_ORIGINS"]}},
+        resources={r"/*": {"origins": allowed_origins}},
         supports_credentials=True,
     )
 
@@ -44,11 +47,12 @@ def create_app(config_class: Optional[type[Config]] = None) -> Flask:
             (time.perf_counter() - g.get("start_time", time.perf_counter())) * 1000, 1
         )
         app.logger.info(
-            "%s %s → %d  (%s ms)",
+            "HTTP %s %s status=%d duration_ms=%s ip=%s",
             request.method,
             request.path,
             response.status_code,
             duration_ms,
+            request.headers.get("X-Forwarded-For", request.remote_addr),
         )
         return response
 
@@ -58,7 +62,40 @@ def create_app(config_class: Optional[type[Config]] = None) -> Flask:
     app.register_blueprint(health_bp)
     app.register_blueprint(opportunities_bp, url_prefix="/api")
 
+    # ── Swagger / OpenAPI Documentation ────────────────────────────────────
+    from flasgger import Swagger
+    swagger_config = {
+        "headers": [],
+        "specs": [
+            {
+                "endpoint": "apispec",
+                "route": "/apispec.json",
+                "rule_filter": lambda rule: True,
+                "model_filter": lambda tag: True,
+            }
+        ],
+        "static_url_path": "/flasgger_static",
+        "swagger_ui": True,
+        "specs_route": "/apidocs/",
+    }
+    swagger_template = {
+        "swagger": "2.0",
+        "info": {
+            "title": "SkillBridge — Opportunity Service API",
+            "description": "Interactive API specification for opportunities catalog, filter queries, and inter-service matching engine.",
+            "version": "1.0.0",
+        },
+        "basePath": "/",
+        "schemes": ["http", "https"],
+    }
+    Swagger(app, config=swagger_config, template=swagger_template)
+
     _register_error_handlers(app)
+
+    @app.route("/apidocs")
+    def apidocs_redirect():
+        from flask import redirect
+        return redirect("/apidocs/")
 
     app.logger.info("✅ Opportunity-service started")
     return app

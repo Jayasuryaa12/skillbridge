@@ -138,3 +138,18 @@ def test_client_check_health_unreachable():
         res = client.check_health()
         assert res["reachable"] is False
         assert res["status"] == "unavailable"
+
+
+def test_client_wake_up_success():
+    client = OpportunityClient(base_url="http://test:5002")
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+
+    with patch.object(client.session, "get", return_value=mock_resp):
+        assert client.wake_up(max_wait=1.0) is True
+
+
+def test_client_wake_up_failure():
+    client = OpportunityClient(base_url="http://test:5002")
+    with patch.object(client.session, "get", side_effect=requests.Timeout("Cold start timed out")):
+        assert client.wake_up(max_wait=1.0) is False

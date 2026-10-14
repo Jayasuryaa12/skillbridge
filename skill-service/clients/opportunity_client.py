@@ -59,12 +59,23 @@ class OpportunityClient:
         self,
         base_url: Optional[str] = None,
         service_key: Optional[str] = None,
-        timeout: tuple[float, float] = (3.0, 8.0),
+        timeout: Optional[tuple[float, float]] = None,
         max_retries: int = 2,
+        cold_start_timeout: float = 45.0,
     ):
         self.base_url = (base_url or os.getenv("OPPORTUNITY_SERVICE_URL", "http://localhost:5002")).rstrip("/")
         self.service_key = service_key or os.getenv("INTER_SERVICE_KEY")
-        self.timeout = timeout
+        
+        # Use provided timeout or cloud-friendly defaults: 15s connect, 25s read
+        if timeout is not None:
+            self.timeout = timeout
+        else:
+            connect_t = float(os.getenv("OPPORTUNITY_CONNECT_TIMEOUT", "15.0"))
+            read_t = float(os.getenv("OPPORTUNITY_READ_TIMEOUT", "25.0"))
+            self.timeout = (connect_t, read_t)
+
+        self.cold_start_timeout = float(os.getenv("COLD_START_TIMEOUT", str(cold_start_timeout)))
+        self._in_cold_start_retry = False
 
         self.session = requests.Session()
 
@@ -88,6 +99,24 @@ class OpportunityClient:
         )
         if self.service_key:
             self.session.headers["X-Service-Key"] = self.service_key
+
+    def wake_up(self, max_wait: Optional[float] = None) -> bool:
+        """
+        Send a wake-up ping to Opportunity Service with an extended timeout.
+        Handles Render free-tier cold starts when spinning up from idle state.
+        """
+        wait_timeout = max_wait or self.cold_start_timeout
+        logger.info("Pinging Opportunity Service for cold-start wake-up: %s (timeout=%ss)...", self.base_url, wait_timeout)
+        try:
+            resp = self.session.get(f"{self.base_url}/health", timeout=(wait_timeout, wait_timeout))
+            if resp.status_code == 200:
+                logger.info("Opportunity Service is awake and operational.")
+                return True
+            resp2 = self.session.get(f"{self.base_url}/api/health", timeout=(wait_timeout, wait_timeout))
+            return resp2.status_code == 200
+        except Exception as exc:
+            logger.warning("Wake-up ping failed or timed out: %s", exc)
+            return False
 
     def _request(
         self,
@@ -164,6 +193,19 @@ class OpportunityClient:
                 duration_ms,
                 net_err,
             )
+            # Render cold-start retry strategy: attempt wake-up ping and retry once
+            if not self._in_cold_start_retry:
+                try:
+                    self._in_cold_start_retry = True
+                    logger.info("Triggering wake-up strategy for potential Render free-tier cold start...")
+                    if self.wake_up(max_wait=self.cold_start_timeout):
+                        logger.info("Opportunity Service awakened! Retrying original request: %s %s", method, url)
+                        return self._request(method, path, json_data=json_data, params=params)
+                except Exception as retry_exc:
+                    logger.warning("Cold-start wake-up retry attempt failed: %s", retry_exc)
+                finally:
+                    self._in_cold_start_retry = False
+
             raise OpportunityServiceUnavailableError(
                 f"Opportunity Service unavailable at {self.base_url}: {net_err}",
                 status_code=503,
@@ -180,8 +222,13 @@ class OpportunityClient:
         """
         Request ranked opportunity recommendations based on student skills and gaps.
         """
+        clean_skills = [
+            {"name": s["name"], "level": int(s.get("level", 1))}
+            for s in skills
+            if isinstance(s, dict) and "name" in s
+        ]
         payload: dict[str, Any] = {
-            "skills": skills,
+            "skills": clean_skills,
             "missing_skills": missing_skills,
             "developing_skills": developing_skills,
             "limit": limit,

@@ -148,9 +148,86 @@ In accordance with microservice design principles:
 - **Decoupled Lifecycles**: Schemas, indexes, and migrations evolve independently without impacting neighboring services.
 - **Cross-Service Communication**: All communication between services traverses authenticated HTTP REST interfaces via `OpportunityClient`.
 
+### Entity-Relationship Diagram (Database-per-Service Model)
+
+```mermaid
+erDiagram
+    %% ── skill_db (Skill Service Domain) ──────────────────────────────────
+    STUDENT {
+        ObjectId _id PK
+        string name
+        string email UK
+        string college
+        string department
+        int year
+        string career_goal FK
+        array skills
+        date created_at
+        date updated_at
+    }
+
+    CAREER {
+        ObjectId _id PK
+        string title
+        string slug UK
+        string description
+        string category
+        array required_skills
+        date created_at
+        date updated_at
+    }
+
+    ROADMAP {
+        ObjectId _id PK
+        string student_id FK
+        string career_id FK
+        array stages
+        int total_estimated_weeks
+        date generated_at
+    }
+
+    %% ── opportunity_db (Opportunity Service Domain) ──────────────────────
+    OPPORTUNITY {
+        ObjectId _id PK
+        string title
+        string organization
+        string type
+        string difficulty
+        string mode
+        string location
+        string stipend
+        array required_skills
+        string apply_url
+        string status
+        date deadline
+    }
+
+    %% Logical Relationships (Cross-service reference by ID only)
+    STUDENT ||--o| CAREER : "references career_goal"
+    STUDENT ||--o| ROADMAP : "owns learning stages"
+    CAREER ||--o{ ROADMAP : "defines requirements for"
+    STUDENT ..o{ OPPORTUNITY : "loosely matched via REST algorithm"
+```
+
 ---
 
-## 5. Inter-Service Communication Specification
+## 5. Architectural Design Decisions & Trade-Offs
+
+### 5.1 Why Microservices over a Monolith?
+- **Domain Independence**: Student career planning is an academic, stateful domain with personalized roadmaps. Opportunity aggregation is an external, catalog-driven domain with frequent writes and expiry cycles. Decoupling allows independent scaling of opportunities without impacting student academic workflows.
+- **Polyglot & Multi-Team Scalability**: In a commercial or large-scale university system, partner organizations can submit opportunities via dedicated Opportunity APIs without having permissions or visibility into sensitive student records.
+
+### 5.2 Why Database-per-Service?
+- **Zero Schema Coupling**: Neither service can perform database-level joins (`$lookup`). All associations occur via HTTP APIs and ObjectIds. If the Opportunity schema evolves to support multi-currency or enterprise recruiter accounts, `skill_db` remains completely untouched.
+- **Independent Failure Blast Radius**: A database spike, maintenance lock, or shard failure in `opportunity_db` will never bring down `skill_db`. Students can always log in, view their roadmaps, and update skills even during opportunity catalog maintenance.
+
+### 5.3 Why REST over gRPC or Message Queues?
+- **Explainability & Simplicity**: For synchronous, student-facing queries (e.g. "What internships fit my skills right now?"), synchronous HTTP/1.1 REST with JSON envelopes is easily inspectable in browser dev tools, Postman, and curl.
+- **Resilient Fallbacks**: With persistent Sessions, connection pooling, and circuit-like retries, REST gives predictable latency guarantees without the infrastructure overhead of a Kafka/RabbitMQ broker.
+
+---
+
+## 6. Inter-Service Communication Specification
 
 ### Connection & Resilience Policy
 - **HTTP Session**: Persistent `requests.Session()` with connection pooling.

@@ -10,6 +10,7 @@ health_bp = Blueprint("health", __name__)
 
 
 @health_bp.get("/api/health")
+@health_bp.get("/health")
 def health_check():
     """
     GET /api/health
