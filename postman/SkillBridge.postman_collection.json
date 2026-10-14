@@ -1,0 +1,468 @@
+{
+  "info": {
+    "_postman_id": "e9a0c28e-5f4b-4b2a-89a7-9f4492bfd60a",
+    "name": "SkillBridge API Collection (Phase 1)",
+    "description": "Comprehensive Postman collection for SkillBridge Backend Microservices:\n- Skill Service (Port 5001)\n- Opportunity Service (Port 5002)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Skill Service (Port 5001)",
+      "item": [
+        {
+          "name": "Health",
+          "item": [
+            {
+              "name": "Health Check",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/health",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "health"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Students",
+          "item": [
+            {
+              "name": "List Students",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students?page=1&page_size=20",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students"],
+                  "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "page_size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List Students (Filtered)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students?department=Computer Science&year=3",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students"],
+                  "query": [
+                    { "key": "department", "value": "Computer Science" },
+                    { "key": "year", "value": "3" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Student",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.success && jsonData.data._id) {",
+                      "    pm.environment.set('student_id', jsonData.data._id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Rahul Verma\",\n  \"email\": \"rahul.verma@example.com\",\n  \"college\": \"IIT Delhi\",\n  \"department\": \"Computer Science\",\n  \"year\": 3,\n  \"skills\": [\n    { \"name\": \"python\", \"level\": 3 },\n    { \"name\": \"sql\", \"level\": 2 }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students"]
+                }
+              }
+            },
+            {
+              "name": "Get Student by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Student Profile",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"year\": 4,\n  \"college\": \"IIT Bombay\"\n}"
+                },
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Student",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Add Skill to Student",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"docker\",\n  \"level\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "skills"]
+                }
+              }
+            },
+            {
+              "name": "Update Student Skill",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"level\": 4\n}"
+                },
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills/docker",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "skills", "docker"]
+                }
+              }
+            },
+            {
+              "name": "Delete Student Skill",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skills/docker",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "skills", "docker"]
+                }
+              }
+            },
+            {
+              "name": "Analyze Skill Gap",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/skill-gap",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "skill-gap"]
+                }
+              }
+            },
+            {
+              "name": "Generate Roadmap",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap/generate",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "roadmap", "generate"]
+                }
+              }
+            },
+            {
+              "name": "Get Student Roadmap",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "roadmap"]
+                }
+              }
+            },
+            {
+              "name": "Update Roadmap Stage Status",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"in_progress\"\n}"
+                },
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/roadmap/stages/1",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "roadmap", "stages", "1"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Careers",
+          "item": [
+            {
+              "name": "List Careers",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/careers?page=1&page_size=10",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "careers"],
+                  "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "page_size", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create Career",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.success && jsonData.data._id) {",
+                      "    pm.environment.set('career_id', jsonData.data._id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Data Platform Engineer\",\n  \"description\": \"Designs and builds distributed big data streaming architectures.\",\n  \"category\": \"Data Engineering\",\n  \"required_skills\": [\n    {\n      \"name\": \"python\",\n      \"required_level\": 4,\n      \"importance\": 5,\n      \"prerequisites\": [],\n      \"category\": \"Programming\"\n    },\n    {\n      \"name\": \"apache-spark\",\n      \"required_level\": 3,\n      \"importance\": 4,\n      \"prerequisites\": [\"python\"],\n      \"category\": \"Big Data\"\n    }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{skill_service_url}}/api/careers",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "careers"]
+                }
+              }
+            },
+            {
+              "name": "Get Career by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/careers/{{career_id}}",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "careers", "{{career_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Career",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Updated description for high-throughput streaming systems.\"\n}"
+                },
+                "url": {
+                  "raw": "{{skill_service_url}}/api/careers/{{career_id}}",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "careers", "{{career_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Career",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/careers/{{career_id}}",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "careers", "{{career_id}}"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Opportunity Service (Port 5002)",
+      "item": [
+        {
+          "name": "Health",
+          "item": [
+            {
+              "name": "Health Check",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/health",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "health"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Opportunities",
+          "item": [
+            {
+              "name": "List Opportunities",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities?page=1&page_size=20",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities"],
+                  "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "page_size", "value": "20" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List Opportunities (Filtered)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities?type=internship&difficulty=intermediate&mode=hybrid",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities"],
+                  "query": [
+                    { "key": "type", "value": "internship" },
+                    { "key": "difficulty", "value": "intermediate" },
+                    { "key": "mode", "value": "hybrid" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Opportunity Stats",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities/stats",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities", "stats"]
+                }
+              }
+            },
+            {
+              "name": "Create Opportunity",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.success && jsonData.data._id) {",
+                      "    pm.environment.set('opportunity_id', jsonData.data._id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Cloud Infrastructure Trainee\",\n  \"type\": \"internship\",\n  \"organization\": \"CloudScale Corp\",\n  \"description\": \"Assist in managing multi-region Kubernetes clusters and Terraform modules.\",\n  \"required_skills\": [\n    { \"name\": \"docker\", \"min_level\": 2 },\n    { \"name\": \"linux\", \"min_level\": 3 }\n  ],\n  \"difficulty\": \"intermediate\",\n  \"mode\": \"online\",\n  \"apply_url\": \"https://cloudscale.example.com/apply\",\n  \"tags\": [\"devops\", \"kubernetes\", \"docker\"],\n  \"status\": \"open\"\n}"
+                },
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities"]
+                }
+              }
+            },
+            {
+              "name": "Get Opportunity by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities/{{opportunity_id}}",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities", "{{opportunity_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Opportunity",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"closed\",\n  \"stipend\": \"₹40,000 / month\"\n}"
+                },
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities/{{opportunity_id}}",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities", "{{opportunity_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Opportunity",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities/{{opportunity_id}}",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities", "{{opportunity_id}}"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

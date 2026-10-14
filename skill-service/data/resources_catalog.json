@@ -1,0 +1,247 @@
+{
+  "python": [
+    { "title": "Python Official Documentation", "url": "https://docs.python.org/3/", "type": "documentation" },
+    { "title": "Python for Everybody – Coursera", "url": "https://www.coursera.org/specializations/python", "type": "course" },
+    { "title": "Automate the Boring Stuff with Python", "url": "https://automatetheboringstuff.com/", "type": "book" }
+  ],
+  "mathematics": [
+    { "title": "Mathematics for Machine Learning – Coursera", "url": "https://www.coursera.org/specializations/mathematics-machine-learning", "type": "course" },
+    { "title": "3Blue1Brown – Essence of Linear Algebra", "url": "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab", "type": "video" },
+    { "title": "Khan Academy – Calculus & Linear Algebra", "url": "https://www.khanacademy.org/math", "type": "course" }
+  ],
+  "statistics": [
+    { "title": "Statistics with Python – Coursera", "url": "https://www.coursera.org/specializations/statistics-with-python", "type": "course" },
+    { "title": "StatQuest with Josh Starmer – YouTube", "url": "https://www.youtube.com/@statquest", "type": "video" },
+    { "title": "OpenIntro Statistics (Free PDF)", "url": "https://www.openintro.org/book/stat/", "type": "book" }
+  ],
+  "machine learning": [
+    { "title": "Machine Learning Specialization – Andrew Ng (Coursera)", "url": "https://www.coursera.org/specializations/machine-learning-introduction", "type": "course" },
+    { "title": "Hands-On Machine Learning with Scikit-Learn, Keras & TF", "url": "https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/", "type": "book" },
+    { "title": "fast.ai – Practical Deep Learning", "url": "https://www.fast.ai/", "type": "course" }
+  ],
+  "deep learning": [
+    { "title": "Deep Learning Specialization – Andrew Ng (Coursera)", "url": "https://www.coursera.org/specializations/deep-learning", "type": "course" },
+    { "title": "Dive into Deep Learning (d2l.ai)", "url": "https://d2l.ai/", "type": "book" },
+    { "title": "MIT 6.S191 Introduction to Deep Learning", "url": "https://introtodeeplearning.com/", "type": "course" }
+  ],
+  "tensorflow": [
+    { "title": "TensorFlow Official Tutorials", "url": "https://www.tensorflow.org/tutorials", "type": "documentation" },
+    { "title": "TensorFlow Developer Certificate – Coursera", "url": "https://www.coursera.org/professional-certificates/tensorflow-in-practice", "type": "course" },
+    { "title": "TensorFlow Playground", "url": "https://playground.tensorflow.org/", "type": "interactive" }
+  ],
+  "natural language processing": [
+    { "title": "NLP Specialization – deeplearning.ai (Coursera)", "url": "https://www.coursera.org/specializations/natural-language-processing", "type": "course" },
+    { "title": "Hugging Face NLP Course", "url": "https://huggingface.co/learn/nlp-course/chapter1/1", "type": "course" },
+    { "title": "Speech and Language Processing – Jurafsky & Martin", "url": "https://web.stanford.edu/~jurafsky/slp3/", "type": "book" }
+  ],
+  "computer vision": [
+    { "title": "CS231n: Convolutional Neural Networks – Stanford", "url": "http://cs231n.stanford.edu/", "type": "course" },
+    { "title": "PyImageSearch – Practical Computer Vision", "url": "https://pyimagesearch.com/", "type": "article" },
+    { "title": "OpenCV Python Tutorials", "url": "https://docs.opencv.org/4.x/d6/d00/tutorial_py_root.html", "type": "documentation" }
+  ],
+  "data preprocessing": [
+    { "title": "Scikit-learn Preprocessing Guide", "url": "https://scikit-learn.org/stable/modules/preprocessing.html", "type": "documentation" },
+    { "title": "Data Cleaning in Python – Kaggle Learn", "url": "https://www.kaggle.com/learn/data-cleaning", "type": "course" },
+    { "title": "Feature Engineering for ML – Udemy", "url": "https://www.udemy.com/course/feature-engineering-for-machine-learning/", "type": "course" }
+  ],
+  "model deployment": [
+    { "title": "MLOps Specialization – deeplearning.ai", "url": "https://www.coursera.org/specializations/machine-learning-engineering-for-production-mlops", "type": "course" },
+    { "title": "Deploying ML Models with Flask and Docker", "url": "https://towardsdatascience.com/deploying-machine-learning-models-with-docker-5d22a4dacb5", "type": "article" },
+    { "title": "BentoML – Model Serving Framework", "url": "https://docs.bentoml.com/", "type": "documentation" }
+  ],
+  "sql": [
+    { "title": "SQL Tutorial – W3Schools", "url": "https://www.w3schools.com/sql/", "type": "tutorial" },
+    { "title": "Mode SQL Tutorial", "url": "https://mode.com/sql-tutorial/", "type": "tutorial" },
+    { "title": "SQLZoo – Interactive SQL Practice", "url": "https://sqlzoo.net/", "type": "interactive" }
+  ],
+  "git": [
+    { "title": "Pro Git Book (free)", "url": "https://git-scm.com/book/en/v2", "type": "book" },
+    { "title": "Learn Git Branching – Interactive", "url": "https://learngitbranching.js.org/", "type": "interactive" },
+    { "title": "Git & GitHub Crash Course – freeCodeCamp", "url": "https://www.youtube.com/watch?v=RGOj5yH7evk", "type": "video" }
+  ],
+  "pandas": [
+    { "title": "Pandas Official Documentation", "url": "https://pandas.pydata.org/docs/", "type": "documentation" },
+    { "title": "Pandas in 10 Minutes", "url": "https://pandas.pydata.org/docs/user_guide/10min.html", "type": "tutorial" },
+    { "title": "Kaggle Pandas Course", "url": "https://www.kaggle.com/learn/pandas", "type": "course" }
+  ],
+  "data visualization": [
+    { "title": "Matplotlib Tutorials", "url": "https://matplotlib.org/stable/tutorials/index.html", "type": "documentation" },
+    { "title": "Seaborn Gallery", "url": "https://seaborn.pydata.org/examples/index.html", "type": "documentation" },
+    { "title": "Data Visualization with Python – Coursera", "url": "https://www.coursera.org/learn/python-for-data-visualization", "type": "course" }
+  ],
+  "exploratory data analysis": [
+    { "title": "EDA in Python – Kaggle Notebook", "url": "https://www.kaggle.com/learn/data-visualization", "type": "course" },
+    { "title": "Practical Statistics for Data Scientists", "url": "https://www.oreilly.com/library/view/practical-statistics-for/9781492072935/", "type": "book" },
+    { "title": "ydata-profiling – Automated EDA", "url": "https://docs.profiling.ydata.ai/", "type": "documentation" }
+  ],
+  "feature engineering": [
+    { "title": "Feature Engineering for Machine Learning (Book)", "url": "https://www.oreilly.com/library/view/feature-engineering-for/9781491953235/", "type": "book" },
+    { "title": "Kaggle Feature Engineering Course", "url": "https://www.kaggle.com/learn/feature-engineering", "type": "course" },
+    { "title": "Feature Engineering Techniques – Towards Data Science", "url": "https://towardsdatascience.com/feature-engineering-for-machine-learning-3a5e293a5114", "type": "article" }
+  ],
+  "hypothesis testing": [
+    { "title": "Khan Academy – Significance Tests", "url": "https://www.khanacademy.org/math/statistics-probability/significance-tests-one-sample", "type": "course" },
+    { "title": "Hypothesis Testing – StatQuest", "url": "https://www.youtube.com/watch?v=0oc49DyA3hU", "type": "video" },
+    { "title": "Think Stats (Free Book)", "url": "https://greenteapress.com/thinkstats2/html/index.html", "type": "book" }
+  ],
+  "a/b testing": [
+    { "title": "A/B Testing – Udacity Course", "url": "https://www.udacity.com/course/ab-testing--ud257", "type": "course" },
+    { "title": "Trustworthy Online Controlled Experiments", "url": "https://www.cambridge.org/core/books/trustworthy-online-controlled-experiments/D97B26382EB0EB2DC2019A7A7B518F59", "type": "book" },
+    { "title": "A/B Testing Guide – Optimizely", "url": "https://www.optimizely.com/optimization-glossary/ab-testing/", "type": "article" }
+  ],
+  "business intelligence": [
+    { "title": "Google Data Analytics Certificate – Coursera", "url": "https://www.coursera.org/professional-certificates/google-data-analytics", "type": "course" },
+    { "title": "Power BI Documentation", "url": "https://learn.microsoft.com/en-us/power-bi/", "type": "documentation" },
+    { "title": "Tableau Public – Learning Resources", "url": "https://public.tableau.com/en-us/s/resources", "type": "tutorial" }
+  ],
+  "r programming": [
+    { "title": "R for Data Science (Free Book)", "url": "https://r4ds.had.co.nz/", "type": "book" },
+    { "title": "Introduction to R – DataCamp", "url": "https://www.datacamp.com/courses/free-introduction-to-r", "type": "course" },
+    { "title": "CRAN R Documentation", "url": "https://cran.r-project.org/", "type": "documentation" }
+  ],
+  "javascript": [
+    { "title": "The Modern JavaScript Tutorial (javascript.info)", "url": "https://javascript.info/", "type": "tutorial" },
+    { "title": "JavaScript – MDN Web Docs", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript", "type": "documentation" },
+    { "title": "freeCodeCamp JavaScript Algorithms", "url": "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/", "type": "course" }
+  ],
+  "html/css": [
+    { "title": "HTML & CSS – MDN Web Docs", "url": "https://developer.mozilla.org/en-US/docs/Learn", "type": "documentation" },
+    { "title": "The Odin Project – Foundations", "url": "https://www.theodinproject.com/paths/foundations", "type": "course" },
+    { "title": "CSS Tricks – A Complete Guide to Flexbox", "url": "https://css-tricks.com/snippets/css/a-guide-to-flexbox/", "type": "article" }
+  ],
+  "react.js": [
+    { "title": "React Official Documentation", "url": "https://react.dev/", "type": "documentation" },
+    { "title": "Full Stack Open – Helsinki University (Free)", "url": "https://fullstackopen.com/en/", "type": "course" },
+    { "title": "React – The Complete Guide – Udemy", "url": "https://www.udemy.com/course/react-the-complete-guide-incl-redux/", "type": "course" }
+  ],
+  "node.js": [
+    { "title": "Node.js Official Documentation", "url": "https://nodejs.org/en/docs/", "type": "documentation" },
+    { "title": "The Odin Project – Node.js Path", "url": "https://www.theodinproject.com/paths/full-stack-javascript", "type": "course" },
+    { "title": "Node.js, Express, MongoDB – Udemy Bootcamp", "url": "https://www.udemy.com/course/the-complete-node-js-developer-course-3rd-edition/", "type": "course" }
+  ],
+  "rest apis": [
+    { "title": "REST API Design Best Practices", "url": "https://restfulapi.net/", "type": "tutorial" },
+    { "title": "Building REST APIs with Node.js – freeCodeCamp", "url": "https://www.freecodecamp.org/news/build-a-restful-api-with-node/", "type": "article" },
+    { "title": "Postman Learning Center", "url": "https://learning.postman.com/", "type": "documentation" }
+  ],
+  "mongodb": [
+    { "title": "MongoDB University – Free Courses", "url": "https://learn.mongodb.com/", "type": "course" },
+    { "title": "MongoDB Official Documentation", "url": "https://www.mongodb.com/docs/", "type": "documentation" },
+    { "title": "Mongoose ODM Guide", "url": "https://mongoosejs.com/docs/guide.html", "type": "documentation" }
+  ],
+  "typescript": [
+    { "title": "TypeScript Official Handbook", "url": "https://www.typescriptlang.org/docs/handbook/intro.html", "type": "documentation" },
+    { "title": "TypeScript Deep Dive (Free Book)", "url": "https://basarat.gitbook.io/typescript/", "type": "book" },
+    { "title": "Execute Program – TypeScript", "url": "https://www.executeprogram.com/courses/typescript", "type": "interactive" }
+  ],
+  "testing": [
+    { "title": "Jest Official Documentation", "url": "https://jestjs.io/docs/getting-started", "type": "documentation" },
+    { "title": "Testing JavaScript – Kent C. Dodds", "url": "https://testingjavascript.com/", "type": "course" },
+    { "title": "Testing Library Docs", "url": "https://testing-library.com/docs/", "type": "documentation" }
+  ],
+  "docker": [
+    { "title": "Docker Official Docs – Get Started", "url": "https://docs.docker.com/get-started/", "type": "documentation" },
+    { "title": "Docker & Kubernetes – Udemy", "url": "https://www.udemy.com/course/docker-kubernetes-the-practical-guide/", "type": "course" },
+    { "title": "Play with Docker – Browser Sandbox", "url": "https://labs.play-with-docker.com/", "type": "interactive" }
+  ],
+  "ci/cd": [
+    { "title": "GitHub Actions Documentation", "url": "https://docs.github.com/en/actions", "type": "documentation" },
+    { "title": "CI/CD Explained – Atlassian", "url": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment", "type": "article" },
+    { "title": "DevOps with GitHub Actions – YouTube", "url": "https://www.youtube.com/watch?v=R8_veQiYBjI", "type": "video" }
+  ],
+  "networking": [
+    { "title": "Computer Networking – A Top-Down Approach", "url": "https://gaia.cs.umass.edu/kurose_ross/index.php", "type": "book" },
+    { "title": "CompTIA Network+ Study Guide", "url": "https://www.comptia.org/certifications/network", "type": "documentation" },
+    { "title": "Networking Fundamentals – Professor Messer", "url": "https://www.professormesser.com/network-plus/n10-008/n10-008-video/n10-008-training-course/", "type": "video" }
+  ],
+  "linux": [
+    { "title": "The Linux Command Line (Free Book)", "url": "https://linuxcommand.org/tlcl.php", "type": "book" },
+    { "title": "Linux Foundation Training – free courses", "url": "https://training.linuxfoundation.org/resources/?_sft_content_type=free-course", "type": "course" },
+    { "title": "OverTheWire: Bandit – Linux Wargame", "url": "https://overthewire.org/wargames/bandit/", "type": "interactive" }
+  ],
+  "security fundamentals": [
+    { "title": "CompTIA Security+ Exam Guide", "url": "https://www.comptia.org/certifications/security", "type": "documentation" },
+    { "title": "Cybersecurity Fundamentals – IBM (Coursera)", "url": "https://www.coursera.org/learn/intro-cyber-security", "type": "course" },
+    { "title": "OWASP Top 10", "url": "https://owasp.org/Top10/", "type": "documentation" }
+  ],
+  "ethical hacking": [
+    { "title": "Certified Ethical Hacker (CEH) – EC-Council", "url": "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/", "type": "course" },
+    { "title": "Penetration Testing – TryHackMe", "url": "https://tryhackme.com/path/outline/pentesting", "type": "interactive" },
+    { "title": "Metasploit Unleashed", "url": "https://www.offensive-security.com/metasploit-unleashed/", "type": "tutorial" }
+  ],
+  "python scripting": [
+    { "title": "Automate the Boring Stuff with Python", "url": "https://automatetheboringstuff.com/", "type": "book" },
+    { "title": "Python Scripting for Cybersecurity – YouTube", "url": "https://www.youtube.com/results?search_query=python+scripting+cybersecurity", "type": "video" },
+    { "title": "Python Official Documentation", "url": "https://docs.python.org/3/", "type": "documentation" }
+  ],
+  "cryptography": [
+    { "title": "Cryptography I – Stanford (Coursera)", "url": "https://www.coursera.org/learn/crypto", "type": "course" },
+    { "title": "An Introduction to Mathematical Cryptography", "url": "https://www.springer.com/gp/book/9781441926746", "type": "book" },
+    { "title": "Crypto101 (Free Book)", "url": "https://www.crypto101.io/", "type": "book" }
+  ],
+  "incident response": [
+    { "title": "SANS Incident Handler's Handbook", "url": "https://www.sans.org/white-papers/33901/", "type": "article" },
+    { "title": "Incident Response – NIST Guide", "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf", "type": "documentation" },
+    { "title": "Blue Team Labs Online", "url": "https://blueteamlabs.online/", "type": "interactive" }
+  ],
+  "siem tools": [
+    { "title": "Splunk Fundamentals 1 – Free", "url": "https://www.splunk.com/en_us/training/free-courses/splunk-fundamentals-1.html", "type": "course" },
+    { "title": "Elastic SIEM Documentation", "url": "https://www.elastic.co/guide/en/security/current/es-overview.html", "type": "documentation" },
+    { "title": "SIEM & Log Management – TryHackMe", "url": "https://tryhackme.com/room/siemfundamentals", "type": "interactive" }
+  ],
+  "vulnerability assessment": [
+    { "title": "Nessus Essentials – Free Scanner", "url": "https://www.tenable.com/products/nessus/nessus-essentials", "type": "documentation" },
+    { "title": "OWASP Vulnerability Testing Guide", "url": "https://owasp.org/www-project-web-security-testing-guide/", "type": "documentation" },
+    { "title": "Vulnerability Assessment – TryHackMe", "url": "https://tryhackme.com/room/vulnerabilities101", "type": "interactive" }
+  ],
+  "firewalls & ids": [
+    { "title": "pfSense Documentation", "url": "https://docs.netgate.com/pfsense/en/latest/", "type": "documentation" },
+    { "title": "Snort IDS – Official Docs", "url": "https://www.snort.org/documents", "type": "documentation" },
+    { "title": "Network Security Monitoring – Chris Sanders", "url": "https://www.amazon.com/Applied-Network-Security-Monitoring-Collection/dp/0124172083", "type": "book" }
+  ],
+  "compliance & risk": [
+    { "title": "NIST Cybersecurity Framework", "url": "https://www.nist.gov/cyberframework", "type": "documentation" },
+    { "title": "ISACA – CISA Certification", "url": "https://www.isaca.org/credentialing/cisa", "type": "course" },
+    { "title": "ISO 27001 Overview", "url": "https://www.iso.org/isoiec-27001-information-security.html", "type": "documentation" }
+  ],
+  "digital forensics": [
+    { "title": "Computer Hacking Forensic Investigator – EC-Council", "url": "https://www.eccouncil.org/programs/computer-hacking-forensic-investigator-chfi/", "type": "course" },
+    { "title": "Autopsy Digital Forensics Platform", "url": "https://www.autopsy.com/", "type": "documentation" },
+    { "title": "DFIR.training Resources", "url": "https://www.dfir.training/", "type": "article" }
+  ],
+  "aws/azure/gcp": [
+    { "title": "AWS Cloud Practitioner Essentials – AWS Training", "url": "https://aws.amazon.com/training/digital/aws-cloud-practitioner-essentials/", "type": "course" },
+    { "title": "Google Cloud Skills Boost", "url": "https://www.cloudskillsboost.google/", "type": "course" },
+    { "title": "Microsoft Azure Fundamentals (AZ-900)", "url": "https://learn.microsoft.com/en-us/certifications/azure-fundamentals/", "type": "course" }
+  ],
+  "kubernetes": [
+    { "title": "Kubernetes Official Documentation", "url": "https://kubernetes.io/docs/home/", "type": "documentation" },
+    { "title": "Kubernetes for Beginners – TechWorld with Nana", "url": "https://www.youtube.com/watch?v=X48VuDVv0do", "type": "video" },
+    { "title": "CKA Exam Prep – Killer.sh", "url": "https://killer.sh/cka", "type": "interactive" }
+  ],
+  "terraform": [
+    { "title": "Terraform Official Docs – Getting Started", "url": "https://developer.hashicorp.com/terraform/tutorials", "type": "documentation" },
+    { "title": "Terraform: Up & Running – Yevgeniy Brikman", "url": "https://www.oreilly.com/library/view/terraform-up-and/9781492046899/", "type": "book" },
+    { "title": "HashiCorp Terraform Associate Cert", "url": "https://developer.hashicorp.com/certifications/infrastructure-automation", "type": "course" }
+  ],
+  "python/bash scripting": [
+    { "title": "Bash Scripting Tutorial – Ryan's Tutorials", "url": "https://ryanstutorials.net/bash-scripting-tutorial/", "type": "tutorial" },
+    { "title": "Shell Scripting – The Linux Command Line", "url": "https://linuxcommand.org/tlcl.php", "type": "book" },
+    { "title": "Python for DevOps (Book)", "url": "https://www.oreilly.com/library/view/python-for-devops/9781492057680/", "type": "book" }
+  ],
+  "monitoring & logging": [
+    { "title": "Prometheus & Grafana – TechWorld with Nana", "url": "https://www.youtube.com/watch?v=h4Sl21AKiDg", "type": "video" },
+    { "title": "Elastic Stack Documentation", "url": "https://www.elastic.co/guide/index.html", "type": "documentation" },
+    { "title": "Observability Engineering (O'Reilly)", "url": "https://www.oreilly.com/library/view/observability-engineering/9781492076438/", "type": "book" }
+  ],
+  "security best practices": [
+    { "title": "OWASP Cheat Sheet Series", "url": "https://cheatsheetseries.owasp.org/", "type": "documentation" },
+    { "title": "DevSecOps – SANS Institute", "url": "https://www.sans.org/cyber-security-courses/devsecops/", "type": "course" },
+    { "title": "AWS Well-Architected Security Pillar", "url": "https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html", "type": "documentation" }
+  ],
+  "ansible": [
+    { "title": "Ansible Official Documentation", "url": "https://docs.ansible.com/", "type": "documentation" },
+    { "title": "Ansible for Beginners – TechWorld with Nana", "url": "https://www.youtube.com/watch?v=1id6ERvfozo", "type": "video" },
+    { "title": "Ansible: Up and Running (O'Reilly)", "url": "https://www.oreilly.com/library/view/ansible-up-and/9781491979266/", "type": "book" }
+  ]
+}

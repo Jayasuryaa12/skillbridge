@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Alice Sharma",
+    "email": "alice.sharma@example.com",
+    "college": "IIT Bombay",
+    "department": "Computer Science",
+    "year": 3,
+    "career_goal_slug": "ai-ml-engineer",
+    "skills": [
+      { "name": "Python", "level": 4 },
+      { "name": "Machine Learning", "level": 3 },
+      { "name": "Deep Learning", "level": 2 },
+      { "name": "TensorFlow", "level": 2 },
+      { "name": "Mathematics", "level": 4 },
+      { "name": "Statistics", "level": 3 },
+      { "name": "SQL", "level": 3 },
+      { "name": "Git", "level": 3 }
+    ]
+  },
+  {
+    "name": "Bob Krishnan",
+    "email": "bob.krishnan@example.com",
+    "college": "NIT Trichy",
+    "department": "Information Technology",
+    "year": 2,
+    "career_goal_slug": "full-stack-developer",
+    "skills": [
+      { "name": "JavaScript", "level": 3 },
+      { "name": "HTML/CSS", "level": 4 },
+      { "name": "React.js", "level": 2 },
+      { "name": "Git", "level": 3 },
+      { "name": "Python", "level": 2 }
+    ]
+  },
+  {
+    "name": "Charlie Patel",
+    "email": "charlie.patel@example.com",
+    "college": "VIT Vellore",
+    "department": "Electronics & Communication",
+    "year": 1,
+    "career_goal_slug": "cybersecurity-analyst",
+    "skills": [
+      { "name": "Networking", "level": 2 },
+      { "name": "Linux", "level": 2 },
+      { "name": "Python Scripting", "level": 1 }
+    ]
+  },
+  {
+    "name": "Diana Menon",
+    "email": "diana.menon@example.com",
+    "college": "BITS Pilani",
+    "department": "Mathematics & Computing",
+    "year": 4,
+    "career_goal_slug": "data-scientist",
+    "skills": [
+      { "name": "Python", "level": 5 },
+      { "name": "Statistics", "level": 4 },
+      { "name": "Machine Learning", "level": 4 },
+      { "name": "SQL", "level": 4 },
+      { "name": "Data Visualization", "level": 4 },
+      { "name": "Pandas", "level": 5 },
+      { "name": "Exploratory Data Analysis", "level": 4 },
+      { "name": "R Programming", "level": 2 },
+      { "name": "Feature Engineering", "level": 3 },
+      { "name": "Hypothesis Testing", "level": 3 }
+    ]
+  }
+]

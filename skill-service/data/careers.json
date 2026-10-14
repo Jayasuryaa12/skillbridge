@@ -1,0 +1,462 @@
+[
+  {
+    "title": "AI/ML Engineer",
+    "slug": "ai-ml-engineer",
+    "description": "AI/ML Engineers design, build and deploy machine learning systems and intelligent applications. They work across the full ML lifecycle: data pipelines, model training, evaluation, and production deployment. Strong foundations in mathematics, Python, and distributed systems are essential.",
+    "category": "Artificial Intelligence",
+    "required_skills": [
+      {
+        "name": "Python",
+        "required_level": 5,
+        "importance": 5,
+        "prerequisites": [],
+        "category": "Programming"
+      },
+      {
+        "name": "Mathematics",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": [],
+        "category": "Mathematics"
+      },
+      {
+        "name": "Statistics",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Mathematics"],
+        "category": "Mathematics"
+      },
+      {
+        "name": "Machine Learning",
+        "required_level": 5,
+        "importance": 5,
+        "prerequisites": ["Python", "Mathematics", "Statistics"],
+        "category": "ML Fundamentals"
+      },
+      {
+        "name": "Deep Learning",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Machine Learning"],
+        "category": "ML Fundamentals"
+      },
+      {
+        "name": "TensorFlow",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Python", "Deep Learning"],
+        "category": "Frameworks"
+      },
+      {
+        "name": "Data Preprocessing",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Python", "Statistics"],
+        "category": "Data Engineering"
+      },
+      {
+        "name": "Natural Language Processing",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Machine Learning"],
+        "category": "ML Specialization"
+      },
+      {
+        "name": "Computer Vision",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Deep Learning"],
+        "category": "ML Specialization"
+      },
+      {
+        "name": "Model Deployment",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Machine Learning"],
+        "category": "MLOps"
+      },
+      {
+        "name": "SQL",
+        "required_level": 3,
+        "importance": 2,
+        "prerequisites": [],
+        "category": "Databases"
+      },
+      {
+        "name": "Git",
+        "required_level": 3,
+        "importance": 2,
+        "prerequisites": [],
+        "category": "DevTools"
+      }
+    ]
+  },
+  {
+    "title": "Data Scientist",
+    "slug": "data-scientist",
+    "description": "Data Scientists extract insights from large datasets using statistical analysis, machine learning, and data visualisation. They communicate findings to stakeholders and drive data-driven decisions across the business. Expertise in Python/R, SQL, and statistical reasoning is essential.",
+    "category": "Data Science",
+    "required_skills": [
+      {
+        "name": "Python",
+        "required_level": 4,
+        "importance": 5,
+        "prerequisites": [],
+        "category": "Programming"
+      },
+      {
+        "name": "Statistics",
+        "required_level": 5,
+        "importance": 5,
+        "prerequisites": [],
+        "category": "Mathematics"
+      },
+      {
+        "name": "SQL",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": [],
+        "category": "Databases"
+      },
+      {
+        "name": "Pandas",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Python"],
+        "category": "Data Tools"
+      },
+      {
+        "name": "Data Visualization",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Python", "Statistics"],
+        "category": "Visualization"
+      },
+      {
+        "name": "Exploratory Data Analysis",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Statistics", "Pandas"],
+        "category": "Analytics"
+      },
+      {
+        "name": "Machine Learning",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Python", "Statistics"],
+        "category": "ML Fundamentals"
+      },
+      {
+        "name": "Feature Engineering",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Machine Learning", "Pandas"],
+        "category": "ML Fundamentals"
+      },
+      {
+        "name": "Hypothesis Testing",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Statistics"],
+        "category": "Mathematics"
+      },
+      {
+        "name": "A/B Testing",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Hypothesis Testing"],
+        "category": "Analytics"
+      },
+      {
+        "name": "Business Intelligence",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": [],
+        "category": "Analytics"
+      },
+      {
+        "name": "R Programming",
+        "required_level": 2,
+        "importance": 2,
+        "prerequisites": [],
+        "category": "Programming"
+      }
+    ]
+  },
+  {
+    "title": "Full Stack Developer",
+    "slug": "full-stack-developer",
+    "description": "Full Stack Developers build end-to-end web applications, working on both frontend UI and backend APIs. They are comfortable with databases, deployment pipelines, and bridging the gap between design and infrastructure. JavaScript mastery, React, and Node.js are foundational.",
+    "category": "Web Development",
+    "required_skills": [
+      {
+        "name": "JavaScript",
+        "required_level": 5,
+        "importance": 5,
+        "prerequisites": [],
+        "category": "Programming"
+      },
+      {
+        "name": "HTML/CSS",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": [],
+        "category": "Frontend"
+      },
+      {
+        "name": "React.js",
+        "required_level": 4,
+        "importance": 5,
+        "prerequisites": ["JavaScript", "HTML/CSS"],
+        "category": "Frontend"
+      },
+      {
+        "name": "Node.js",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["JavaScript"],
+        "category": "Backend"
+      },
+      {
+        "name": "REST APIs",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Node.js"],
+        "category": "Backend"
+      },
+      {
+        "name": "SQL",
+        "required_level": 3,
+        "importance": 4,
+        "prerequisites": [],
+        "category": "Databases"
+      },
+      {
+        "name": "MongoDB",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": [],
+        "category": "Databases"
+      },
+      {
+        "name": "Git",
+        "required_level": 4,
+        "importance": 3,
+        "prerequisites": [],
+        "category": "DevTools"
+      },
+      {
+        "name": "TypeScript",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["JavaScript"],
+        "category": "Programming"
+      },
+      {
+        "name": "Testing",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["JavaScript"],
+        "category": "Testing"
+      },
+      {
+        "name": "Docker",
+        "required_level": 2,
+        "importance": 2,
+        "prerequisites": [],
+        "category": "Infrastructure"
+      },
+      {
+        "name": "CI/CD",
+        "required_level": 2,
+        "importance": 2,
+        "prerequisites": ["Git", "Docker"],
+        "category": "DevTools"
+      }
+    ]
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "slug": "cybersecurity-analyst",
+    "description": "Cybersecurity Analysts protect organisations from cyber threats by monitoring networks, identifying vulnerabilities, and responding to incidents. They need deep knowledge of networking protocols, operating systems, security tools, and ethical hacking techniques.",
+    "category": "Cybersecurity",
+    "required_skills": [
+      {
+        "name": "Networking",
+        "required_level": 5,
+        "importance": 5,
+        "prerequisites": [],
+        "category": "Fundamentals"
+      },
+      {
+        "name": "Linux",
+        "required_level": 4,
+        "importance": 5,
+        "prerequisites": [],
+        "category": "Operating Systems"
+      },
+      {
+        "name": "Security Fundamentals",
+        "required_level": 5,
+        "importance": 5,
+        "prerequisites": ["Networking"],
+        "category": "Security"
+      },
+      {
+        "name": "Vulnerability Assessment",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Networking", "Linux"],
+        "category": "Penetration Testing"
+      },
+      {
+        "name": "Ethical Hacking",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Networking", "Linux", "Security Fundamentals"],
+        "category": "Penetration Testing"
+      },
+      {
+        "name": "Python Scripting",
+        "required_level": 3,
+        "importance": 4,
+        "prerequisites": [],
+        "category": "Programming"
+      },
+      {
+        "name": "Incident Response",
+        "required_level": 3,
+        "importance": 4,
+        "prerequisites": ["Security Fundamentals"],
+        "category": "Security Operations"
+      },
+      {
+        "name": "Cryptography",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Security Fundamentals"],
+        "category": "Security"
+      },
+      {
+        "name": "SIEM Tools",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Security Fundamentals"],
+        "category": "Security Operations"
+      },
+      {
+        "name": "Firewalls & IDS",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Networking", "Security Fundamentals"],
+        "category": "Security Operations"
+      },
+      {
+        "name": "Compliance & Risk",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Security Fundamentals"],
+        "category": "Compliance"
+      },
+      {
+        "name": "Digital Forensics",
+        "required_level": 2,
+        "importance": 2,
+        "prerequisites": ["Security Fundamentals"],
+        "category": "Security"
+      }
+    ]
+  },
+  {
+    "title": "Cloud/DevOps Engineer",
+    "slug": "cloud-devops-engineer",
+    "description": "Cloud/DevOps Engineers design and maintain scalable cloud infrastructure, automate deployments through CI/CD pipelines, and ensure system reliability. They work with cloud providers (AWS/Azure/GCP), container orchestration (Kubernetes), and infrastructure-as-code tools.",
+    "category": "Cloud Computing",
+    "required_skills": [
+      {
+        "name": "Linux",
+        "required_level": 4,
+        "importance": 5,
+        "prerequisites": [],
+        "category": "Operating Systems"
+      },
+      {
+        "name": "Networking",
+        "required_level": 3,
+        "importance": 4,
+        "prerequisites": [],
+        "category": "Fundamentals"
+      },
+      {
+        "name": "Git",
+        "required_level": 4,
+        "importance": 3,
+        "prerequisites": [],
+        "category": "DevTools"
+      },
+      {
+        "name": "Docker",
+        "required_level": 4,
+        "importance": 5,
+        "prerequisites": ["Linux"],
+        "category": "Containers"
+      },
+      {
+        "name": "AWS/Azure/GCP",
+        "required_level": 4,
+        "importance": 5,
+        "prerequisites": ["Networking", "Linux"],
+        "category": "Cloud Platforms"
+      },
+      {
+        "name": "CI/CD",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Git"],
+        "category": "DevOps"
+      },
+      {
+        "name": "Kubernetes",
+        "required_level": 4,
+        "importance": 4,
+        "prerequisites": ["Docker"],
+        "category": "Containers"
+      },
+      {
+        "name": "Terraform",
+        "required_level": 3,
+        "importance": 4,
+        "prerequisites": ["AWS/Azure/GCP"],
+        "category": "Infrastructure as Code"
+      },
+      {
+        "name": "Python/Bash Scripting",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Linux"],
+        "category": "Programming"
+      },
+      {
+        "name": "Monitoring & Logging",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": ["Docker", "Kubernetes"],
+        "category": "Observability"
+      },
+      {
+        "name": "Security Best Practices",
+        "required_level": 3,
+        "importance": 3,
+        "prerequisites": [],
+        "category": "Security"
+      },
+      {
+        "name": "Ansible",
+        "required_level": 2,
+        "importance": 2,
+        "prerequisites": ["Python/Bash Scripting"],
+        "category": "Infrastructure as Code"
+      }
+    ]
+  }
+]
