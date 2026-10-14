@@ -78,3 +78,30 @@ class UpdateOpportunitySchema(Schema):
     def at_least_one_field(self, data: dict, **kwargs) -> None:
         if not data:
             raise ValidationError("At least one field must be provided for update.")
+
+
+class StudentSkillEntrySchema(Schema):
+    """A skill entry in student payload for matching."""
+
+    name = fields.Str(required=True, validate=validate.Length(min=1, max=100))
+    level = fields.Int(required=True, validate=validate.Range(min=1, max=5))
+
+    class Meta:
+        unknown = EXCLUDE
+
+
+class MatchOpportunitiesSchema(Schema):
+    """Validate body of POST /api/opportunities/match."""
+
+    skills = fields.List(fields.Nested(StudentSkillEntrySchema), load_default=[])
+    missing_skills = fields.List(fields.Str(), load_default=[])
+    developing_skills = fields.List(fields.Str(), load_default=[])
+    limit = fields.Int(load_default=10, validate=validate.Range(min=1, max=50))
+    types = fields.List(
+        fields.Str(validate=validate.OneOf(["project", "hackathon", "internship", "workshop"])),
+        load_default=None,
+        allow_none=True,
+    )
+
+    class Meta:
+        unknown = EXCLUDE

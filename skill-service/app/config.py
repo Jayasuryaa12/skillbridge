@@ -28,6 +28,10 @@ class Config:
         "CORS_ORIGINS", "http://localhost:5173,http://localhost:3000"
     ).split(",")
 
+    # ── Inter-Service Integration ──────────────────────────────────────────
+    OPPORTUNITY_SERVICE_URL: str = os.getenv("OPPORTUNITY_SERVICE_URL", "http://localhost:5002")
+    INTER_SERVICE_KEY: str | None = os.getenv("INTER_SERVICE_KEY", None)
+
     # ── Pagination ─────────────────────────────────────────────────────────
     DEFAULT_PAGE_SIZE: int = int(os.getenv("DEFAULT_PAGE_SIZE", "20"))
     MAX_PAGE_SIZE: int = int(os.getenv("MAX_PAGE_SIZE", "100"))

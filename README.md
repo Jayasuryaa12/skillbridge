@@ -77,7 +77,7 @@ curl http://localhost:5002/api/health
 | Phase | Description | Status |
 |-------|-------------|--------|
 | Phase 1 | Backend microservices, CRUD, MongoDB, seed data, tests | ✅ Complete |
-| Phase 2 | Inter-service communication | 🔜 Pending |
+| Phase 2 | Inter-service REST communication, resilience & dashboard | ✅ Complete |
 | Phase 3 | Advanced gap analysis + recommendations | 🔜 Pending |
 | Phase 4 | React frontend | 🔜 Pending |
 | Phase 5 | Deployment, Postman, docs, report | 🔜 Pending |

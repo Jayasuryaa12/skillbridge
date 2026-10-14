@@ -19,6 +19,27 @@ Checks service connectivity and database responsiveness.
     "mongodb": "connected",
     "version": "1.0.0"
   }
+### `GET /api/system/status`
+Returns composite service health plus real-time reachability and round-trip latency to Opportunity Service.
+- **Response `200 OK`**:
+```json
+{
+  "success": true,
+  "data": {
+    "overall_status": "healthy",
+    "timestamp": "2026-10-14T21:40:00Z",
+    "skill_service": {
+      "service": "skill-service",
+      "status": "healthy",
+      "database": "connected"
+    },
+    "opportunity_service": {
+      "status": "healthy",
+      "reachable": true,
+      "latency_ms": 14.8,
+      "url": "http://localhost:5002"
+    }
+  }
 }
 ```
 
@@ -189,6 +210,85 @@ Update status of a roadmap stage.
 }
 ```
 Valid statuses: `not_started`, `in_progress`, `completed`.
+
+---
+
+## 5. Inter-Service Recommendations & Dashboard
+### `GET /api/students/<id>/recommendations`
+Queries the student profile, executes gap analysis, and queries Opportunity Service `/api/opportunities/match` to retrieve ranked opportunities.
+- **Query Parameters**:
+  - `limit` (int, default: 10, max: 50)
+  - `types` (comma-separated): `internship`, `project`, `hackathon`, `workshop`
+- **Graceful Degradation**: If Opportunity Service is unreachable, returns `200 OK` with `recommendations: []`, local gap analysis intact, and `opportunity_service: {status: "unavailable"}`.
+- **Response `200 OK`**:
+```json
+{
+  "success": true,
+  "data": {
+    "student": {
+      "_id": "660c1d2e8f1b2c001a1e4f11",
+      "name": "Alice Sharma",
+      "email": "alice.sharma@example.com"
+    },
+    "career": {
+      "_id": "660c1d2e8f1b2c001a1e4f01",
+      "title": "AI/ML Engineer"
+    },
+    "skill_gap_summary": {
+      "readiness_score": 68.5,
+      "matched_count": 4,
+      "developing_count": 3,
+      "missing_count": 2
+    },
+    "recommendations": [
+      {
+        "opportunity": {
+          "_id": "opp001",
+          "title": "Machine Learning Research Intern",
+          "type": "internship"
+        },
+        "match_score": 88.0,
+        "matched_skills": ["Python (Lv. 4)"],
+        "skills_to_learn": ["PyTorch"],
+        "reason": "Matches 1/2 required skills, targets your career gap skills."
+      }
+    ],
+    "opportunity_service": {
+      "status": "available"
+    }
+  }
+}
+```
+
+### `GET /api/students/<id>/dashboard`
+Single unified endpoint for the frontend dashboard combining readiness score, radar category breakdown, skill gap counts, top 5 priority skills, roadmap progress %, top 5 opportunity recommendations, and opportunity catalog stats.
+- **Response `200 OK`**:
+```json
+{
+  "success": true,
+  "data": {
+    "student": { "_id": "...", "name": "Alice Sharma" },
+    "career": { "_id": "...", "title": "AI/ML Engineer" },
+    "readiness_score": 68.5,
+    "category_scores": [
+      { "category": "Core ML", "score": 75.0, "total_skills": 4 }
+    ],
+    "skill_counts": {
+      "matched": 4,
+      "developing": 3,
+      "missing": 2
+    },
+    "top_priority_skills": [ ... ],
+    "roadmap_progress_percentage": 50.0,
+    "top_recommendations": [ ... ],
+    "opportunity_stats": {
+      "total": 32,
+      "by_type": { "internship": 10, "hackathon": 8, "project": 8, "workshop": 6 }
+    },
+    "opportunity_service": { "status": "available" }
+  }
+}
+```
 
 ---
 

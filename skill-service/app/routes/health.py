@@ -39,3 +39,48 @@ def health_check():
         },
         message="Skill service is healthy",
     )
+
+
+@health_bp.get("/api/system/status")
+def system_status():
+    """
+    GET /api/system/status
+
+    Composite system status reporting Skill Service status plus
+    Opportunity Service reachability and round-trip latency.
+    """
+    from datetime import datetime, timezone
+    from clients.opportunity_client import OpportunityClient
+
+    # 1. Skill service DB status
+    try:
+        db = get_db()
+        db.command("ping")
+        skill_db_status = "connected"
+    except Exception as exc:
+        skill_db_status = f"unreachable: {exc}"
+
+    # 2. Opportunity service status
+    client = OpportunityClient()
+    opp_status = client.check_health()
+    opp_status["url"] = client.base_url
+
+    overall_status = "healthy"
+    if skill_db_status != "connected":
+        overall_status = "unhealthy"
+    elif not opp_status.get("reachable"):
+        overall_status = "degraded"
+
+    return success_response(
+        data={
+            "overall_status": overall_status,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "skill_service": {
+                "service": "skill-service",
+                "status": "healthy" if skill_db_status == "connected" else "unhealthy",
+                "database": skill_db_status,
+            },
+            "opportunity_service": opp_status,
+        },
+        message="System status retrieved",
+    )

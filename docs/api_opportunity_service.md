@@ -118,6 +118,50 @@ Returns aggregated counts across categories for dashboards and analytics.
 
 ---
 
+### `POST /api/opportunities/match`
+Inter-service scoring endpoint matching a student's skills, missing gap skills, and developing skills against all active, non-expired opportunities.
+- **Headers**:
+  - `Content-Type: application/json`
+  - `X-Service-Key: <secret>` (Optional/required if `INTER_SERVICE_KEY` configured)
+- **Request Body**:
+```json
+{
+  "skills": [
+    { "name": "Python", "level": 3 }
+  ],
+  "missing_skills": ["Docker"],
+  "developing_skills": ["SQL"],
+  "limit": 10,
+  "types": ["internship", "project"]
+}
+```
+- **Response `200 OK`**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "opportunity": {
+        "_id": "660c1d2e8f1b2c001a1e4f30",
+        "title": "Backend Python Apprentice",
+        "type": "internship",
+        "organization": "TechCorp",
+        "difficulty": "intermediate",
+        "mode": "remote",
+        "apply_url": "https://example.com/apply"
+      },
+      "match_score": 85.0,
+      "matched_skills": ["Python (Lv. 3)"],
+      "skills_to_learn": ["Docker"],
+      "reason": "Matches 1/2 required skills, targets your career gap skills, helps you learn Docker."
+    }
+  ],
+  "message": "Found 1 matching opportunities"
+}
+```
+
+---
+
 ### `POST /api/opportunities`
 Create a new opportunity.
 

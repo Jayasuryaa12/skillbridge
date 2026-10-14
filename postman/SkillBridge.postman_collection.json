@@ -23,6 +23,18 @@
                   "path": ["api", "health"]
                 }
               }
+            },
+            {
+              "name": "System Status (Inter-Service Reachability)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/system/status",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "system", "status"]
+                }
+              }
             }
           ]
         },
@@ -226,6 +238,33 @@
                   "path": ["api", "students", "{{student_id}}", "roadmap", "stages", "1"]
                 }
               }
+            },
+            {
+              "name": "Get Student Recommendations (Inter-Service)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/recommendations?limit=10",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "recommendations"],
+                  "query": [
+                    { "key": "limit", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Student Dashboard (Unified Aggregation)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{skill_service_url}}/api/students/{{student_id}}/dashboard",
+                  "host": ["{{skill_service_url}}"],
+                  "path": ["api", "students", "{{student_id}}", "dashboard"]
+                }
+              }
             }
           ]
         },
@@ -387,6 +426,22 @@
                   "raw": "{{opportunity_service_url}}/api/opportunities/stats",
                   "host": ["{{opportunity_service_url}}"],
                   "path": ["api", "opportunities", "stats"]
+                }
+              }
+            },
+            {
+              "name": "Match Opportunities (Inter-Service Scoring)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"skills\": [\n    { \"name\": \"Python\", \"level\": 3 }\n  ],\n  \"missing_skills\": [\"Docker\"],\n  \"developing_skills\": [\"SQL\"],\n  \"limit\": 10,\n  \"types\": [\"internship\", \"project\"]\n}"
+                },
+                "url": {
+                  "raw": "{{opportunity_service_url}}/api/opportunities/match",
+                  "host": ["{{opportunity_service_url}}"],
+                  "path": ["api", "opportunities", "match"]
                 }
               }
             },

@@ -276,3 +276,265 @@ def skill_gap(student_id: str):
 
     result = analyze_skill_gap(raw_student, raw_career)
     return success_response(result, "Skill gap analysis completed")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# INTER-SERVICE RECOMMENDATIONS & DASHBOARD
+# ══════════════════════════════════════════════════════════════════════════════
+
+@students_bp.get("/students/<student_id>/recommendations")
+def get_recommendations(student_id: str):
+    """
+    GET /api/students/<id>/recommendations?types=&limit=
+
+    Flow: load student -> run gap analysis -> call Opportunity Service /match
+    with the student's skills and gap data -> merge and return.
+    Implements graceful degradation when Opportunity Service is unreachable.
+    """
+    from bson import ObjectId
+    from clients.opportunity_client import (
+        OpportunityClient,
+        OpportunityInvalidResponseError,
+        OpportunityServiceUnavailableError,
+        OpportunityUnauthorizedError,
+    )
+
+    if err := _validate_id(student_id, "student ID"):
+        return err
+
+    db = get_db()
+    raw_student = db.students.find_one({"_id": ObjectId(student_id)})
+    if not raw_student:
+        return error_response("NOT_FOUND", f"Student '{student_id}' not found.", status_code=404)
+
+    career_id = request.args.get("career_id") or raw_student.get("career_goal")
+    if not career_id:
+        return error_response(
+            "MISSING_CAREER",
+            "No career_id provided and student has no career_goal set.",
+            status_code=400,
+        )
+
+    if not is_valid_object_id(career_id):
+        return error_response("INVALID_ID", f"Invalid career_id: '{career_id}'", status_code=400)
+
+    raw_career = db.careers.find_one({"_id": ObjectId(career_id)})
+    if not raw_career:
+        return error_response("NOT_FOUND", f"Career '{career_id}' not found.", status_code=404)
+
+    # 1. Run gap analysis locally
+    gap_result = analyze_skill_gap(raw_student, raw_career)
+
+    # 2. Parse query parameters
+    try:
+        limit = min(50, max(1, int(request.args.get("limit", 10))))
+    except ValueError:
+        limit = 10
+
+    raw_types = request.args.get("types")
+    types = [t.strip() for t in raw_types.split(",") if t.strip()] if raw_types else None
+
+    # 3. Call Opportunity Service via client
+    opp_client = OpportunityClient()
+    student_skills = raw_student.get("skills", [])
+    missing_skills = [s["skill"] for s in gap_result.get("missing", [])]
+    developing_skills = [s["skill"] for s in gap_result.get("developing", [])]
+
+    student_summary = {
+        "_id": str(raw_student["_id"]),
+        "name": raw_student["name"],
+        "email": raw_student["email"],
+        "college": raw_student.get("college"),
+        "department": raw_student.get("department"),
+        "year": raw_student.get("year"),
+    }
+    career_summary = {
+        "_id": str(raw_career["_id"]),
+        "title": raw_career["title"],
+        "slug": raw_career.get("slug"),
+        "category": raw_career.get("category"),
+    }
+    gap_summary = {
+        "readiness_score": gap_result["readiness_score"],
+        "matched_count": len(gap_result.get("matched", [])),
+        "developing_count": len(gap_result.get("developing", [])),
+        "missing_count": len(gap_result.get("missing", [])),
+    }
+
+    try:
+        matches = opp_client.match_opportunities(
+            skills=student_skills,
+            missing_skills=missing_skills,
+            developing_skills=developing_skills,
+            limit=limit,
+            types=types,
+        )
+        return success_response(
+            data={
+                "student": student_summary,
+                "career": career_summary,
+                "skill_gap_summary": gap_summary,
+                "recommendations": matches,
+                "opportunity_service": {"status": "available"},
+            },
+            message=f"Retrieved {len(matches)} recommended opportunities",
+        )
+    except OpportunityServiceUnavailableError as exc:
+        logger.warning("Graceful degradation on recommendations: %s", exc)
+        return success_response(
+            data={
+                "student": student_summary,
+                "career": career_summary,
+                "skill_gap_summary": gap_summary,
+                "recommendations": [],
+                "opportunity_service": {
+                    "status": "unavailable",
+                    "message": "Opportunity Service is temporarily unreachable; gap analysis preserved.",
+                },
+            },
+            message="Recommendations partially retrieved (Opportunity Service unavailable)",
+        )
+    except OpportunityUnauthorizedError as exc:
+        return error_response(
+            "UPSTREAM_UNAUTHORIZED",
+            "Opportunity Service authentication failed.",
+            details=str(exc),
+            status_code=502,
+        )
+    except OpportunityInvalidResponseError as exc:
+        return error_response(
+            "UPSTREAM_INVALID_RESPONSE",
+            f"Opportunity Service returned an invalid response: {exc}",
+            details=exc.details,
+            status_code=502,
+        )
+
+
+@students_bp.get("/students/<student_id>/dashboard")
+def get_dashboard(student_id: str):
+    """
+    GET /api/students/<id>/dashboard
+
+    Unified dashboard endpoint for the frontend combining:
+    - readiness score
+    - category scores (for radar chart)
+    - matched, developing, missing counts
+    - top 5 priority skills to learn
+    - roadmap progress percentage
+    - top 5 recommended opportunities (from Opportunity Service)
+    - opportunity catalog stats (from Opportunity Service)
+    """
+    from bson import ObjectId
+    from clients.opportunity_client import (
+        OpportunityClient,
+        OpportunityInvalidResponseError,
+        OpportunityServiceUnavailableError,
+        OpportunityUnauthorizedError,
+    )
+
+    if err := _validate_id(student_id, "student ID"):
+        return err
+
+    db = get_db()
+    raw_student = db.students.find_one({"_id": ObjectId(student_id)})
+    if not raw_student:
+        return error_response("NOT_FOUND", f"Student '{student_id}' not found.", status_code=404)
+
+    career_id = request.args.get("career_id") or raw_student.get("career_goal")
+    if not career_id:
+        return error_response(
+            "MISSING_CAREER",
+            "No career_id provided and student has no career_goal set.",
+            status_code=400,
+        )
+
+    if not is_valid_object_id(career_id):
+        return error_response("INVALID_ID", f"Invalid career_id: '{career_id}'", status_code=400)
+
+    raw_career = db.careers.find_one({"_id": ObjectId(career_id)})
+    if not raw_career:
+        return error_response("NOT_FOUND", f"Career '{career_id}' not found.", status_code=404)
+
+    # 1. Skill Gap Analysis
+    gap_result = analyze_skill_gap(raw_student, raw_career)
+
+    # 2. Roadmap progress calculation
+    roadmap = db.roadmaps.find_one({"student_id": student_id})
+    if not roadmap:
+        roadmap = db.roadmaps.find_one({"student_id": ObjectId(student_id)})
+
+    roadmap_progress = 0.0
+    if roadmap and roadmap.get("stages"):
+        stages = roadmap["stages"]
+        completed = sum(1 for s in stages if s.get("status") == "completed")
+        roadmap_progress = round((completed / len(stages)) * 100, 1)
+
+    # 3. Outbound calls to Opportunity Service
+    opp_client = OpportunityClient()
+    student_skills = raw_student.get("skills", [])
+    missing_skills = [s["skill"] for s in gap_result.get("missing", [])]
+    developing_skills = [s["skill"] for s in gap_result.get("developing", [])]
+
+    top_recommendations = []
+    opportunity_stats = None
+    opp_service_status = {"status": "available"}
+
+    try:
+        top_recommendations = opp_client.match_opportunities(
+            skills=student_skills,
+            missing_skills=missing_skills,
+            developing_skills=developing_skills,
+            limit=5,
+        )
+        opportunity_stats = opp_client.get_opportunity_stats()
+    except OpportunityServiceUnavailableError as exc:
+        logger.warning("Graceful degradation on dashboard: %s", exc)
+        opp_service_status = {
+            "status": "unavailable",
+            "message": "Opportunity Service is unreachable; showing local student profile.",
+        }
+    except OpportunityUnauthorizedError as exc:
+        return error_response(
+            "UPSTREAM_UNAUTHORIZED",
+            "Opportunity Service authentication failed.",
+            details=str(exc),
+            status_code=502,
+        )
+    except OpportunityInvalidResponseError as exc:
+        return error_response(
+            "UPSTREAM_INVALID_RESPONSE",
+            f"Opportunity Service returned an invalid response: {exc}",
+            details=exc.details,
+            status_code=502,
+        )
+
+    dashboard_data = {
+        "student": {
+            "_id": str(raw_student["_id"]),
+            "name": raw_student["name"],
+            "email": raw_student["email"],
+            "college": raw_student.get("college"),
+            "department": raw_student.get("department"),
+            "year": raw_student.get("year"),
+        },
+        "career": {
+            "_id": str(raw_career["_id"]),
+            "title": raw_career["title"],
+            "slug": raw_career.get("slug"),
+            "category": raw_career.get("category"),
+        },
+        "readiness_score": gap_result["readiness_score"],
+        "category_scores": gap_result["category_scores"],
+        "skill_counts": {
+            "matched": len(gap_result.get("matched", [])),
+            "developing": len(gap_result.get("developing", [])),
+            "missing": len(gap_result.get("missing", [])),
+        },
+        "top_priority_skills": gap_result.get("priority_list", [])[:5],
+        "roadmap_progress_percentage": roadmap_progress,
+        "top_recommendations": top_recommendations,
+        "opportunity_stats": opportunity_stats,
+        "opportunity_service": opp_service_status,
+    }
+
+    return success_response(dashboard_data, "Dashboard data retrieved successfully")

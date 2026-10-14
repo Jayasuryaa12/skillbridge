@@ -17,8 +17,12 @@ from flask import Blueprint, current_app, request
 from marshmallow import ValidationError
 
 from app.db import get_db
-from app.models.schemas import CreateOpportunitySchema, UpdateOpportunitySchema
-from app.services import opportunity_service
+from app.models.schemas import (
+    CreateOpportunitySchema,
+    MatchOpportunitiesSchema,
+    UpdateOpportunitySchema,
+)
+from app.services import matching_service, opportunity_service
 from app.utils.helpers import is_valid_object_id, parse_pagination
 from app.utils.response import (
     created_response,
@@ -32,6 +36,21 @@ opportunities_bp = Blueprint("opportunities", __name__)
 
 _create_schema = CreateOpportunitySchema()
 _update_schema = UpdateOpportunitySchema()
+_match_schema = MatchOpportunitiesSchema()
+
+
+def _check_service_auth():
+    """Verify X-Service-Key against INTER_SERVICE_KEY if configured."""
+    configured_key = current_app.config.get("INTER_SERVICE_KEY")
+    if configured_key:
+        req_key = request.headers.get("X-Service-Key")
+        if req_key != configured_key:
+            return error_response(
+                "UNAUTHORIZED",
+                "Invalid or missing service key in X-Service-Key header.",
+                status_code=401,
+            )
+    return None
 
 # Valid sort values
 _VALID_SORTS = {"deadline", "newest"}
@@ -60,6 +79,31 @@ def get_stats():
     """GET /api/opportunities/stats — Aggregated counts by type, status, difficulty."""
     stats = opportunity_service.get_stats(get_db())
     return success_response(stats, "Stats retrieved")
+
+
+@opportunities_bp.post("/opportunities/match")
+def match_opportunities():
+    """POST /api/opportunities/match — Match student profile & gaps to opportunities."""
+    auth_err = _check_service_auth()
+    if auth_err:
+        return auth_err
+
+    try:
+        data = _match_schema.load(request.get_json(silent=True) or {})
+    except ValidationError as exc:
+        return error_response("VALIDATION_ERROR", "Invalid input", exc.messages, 422)
+
+    db = get_db()
+    matches = matching_service.match_opportunities(
+        db=db,
+        student_skills=data["skills"],
+        missing_skills=data["missing_skills"],
+        developing_skills=data["developing_skills"],
+        limit=data["limit"],
+        types=data.get("types"),
+    )
+    logger.info("Matched %d opportunities for student query", len(matches))
+    return success_response(matches, f"Found {len(matches)} matching opportunities")
 
 
 @opportunities_bp.get("/opportunities")
