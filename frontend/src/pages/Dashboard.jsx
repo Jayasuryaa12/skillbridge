@@ -119,25 +119,39 @@ export const Dashboard = () => {
   const missingCount = payload.skill_counts?.missing ?? payload.gap_summary?.missing_skills?.length ?? 0;
   const totalRequired = matchedCount + developingCount + missingCount;
   const roadmapProgress = payload.roadmap_progress_percentage ?? 0;
+  const roadmap_summary = payload.roadmap_summary || {
+    total_stages: payload.roadmap_stages_count || 0,
+    completed_stages: Math.round((roadmapProgress / 100) * (payload.roadmap_stages_count || 0)),
+  };
   const recommended_opportunities = payload.top_recommendations || payload.recommended_opportunities || [];
   const opportunity_service_status = payload.opportunity_service?.status || payload.opportunity_service_status || 'operational';
-  const categoryScores = payload.category_scores || {};
+  const categoryScores = payload.category_scores || [];
   const topPrioritySkills = payload.top_priority_skills || [];
 
-  // Prepare radar chart data
-  const radarData = Object.keys(categoryScores).length > 0
-    ? Object.entries(categoryScores).map(([cat, score]) => ({
-        skill: cat,
-        studentLevel: Math.round((score / 20) * 10) / 10,
-        requiredLevel: 4.5,
-        fullMark: 5,
-      }))
-    : topPrioritySkills.map((s) => ({
-        skill: s.skill || s.name,
-        studentLevel: s.current_level || 0,
-        requiredLevel: s.required_level || 4,
-        fullMark: 5,
-      }));
+  // Prepare radar chart data supporting both array of {category, score} and object {category: score}
+  let radarData = [];
+  if (Array.isArray(categoryScores) && categoryScores.length > 0) {
+    radarData = categoryScores.map((item) => ({
+      skill: item.category || item.name || 'Skill',
+      studentLevel: Math.round(((item.score || 0) / 20) * 10) / 10,
+      requiredLevel: 4.5,
+      fullMark: 5,
+    }));
+  } else if (categoryScores && typeof categoryScores === 'object' && Object.keys(categoryScores).length > 0) {
+    radarData = Object.entries(categoryScores).map(([cat, score]) => ({
+      skill: cat,
+      studentLevel: Math.round(((typeof score === 'number' ? score : score?.score || 0) / 20) * 10) / 10,
+      requiredLevel: 4.5,
+      fullMark: 5,
+    }));
+  } else if (topPrioritySkills.length > 0) {
+    radarData = topPrioritySkills.map((s) => ({
+      skill: s.skill || s.name,
+      studentLevel: s.current_level || 0,
+      requiredLevel: s.target_level || s.required_level || 4,
+      fullMark: 5,
+    }));
+  }
 
   return (
     <div className="space-y-6">
@@ -394,7 +408,7 @@ export const Dashboard = () => {
                     <span>Critical Prerequisite Missing</span>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-300">
-                    <strong>{gap_summary.missing_skills[0]?.name}</strong> is required for your target role. Start Stage 1 in your learning roadmap.
+                    <strong>{topPrioritySkills[0]?.skill || topPrioritySkills[0]?.name || 'Key prerequisite'}</strong> is required for your target role. Start Stage 1 in your learning roadmap.
                   </p>
                 </div>
               )}

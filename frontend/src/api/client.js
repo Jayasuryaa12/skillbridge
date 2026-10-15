@@ -103,7 +103,21 @@ skillApi.interceptors.response.use(
   },
   (error) => {
     endRequestTracking();
-    const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message || 'Skill Service error';
+    const data = error.response?.data;
+    let errorMsg = 'Skill Service error';
+    if (data?.error?.details) {
+      if (typeof data.error.details === 'object') {
+        errorMsg = Object.entries(data.error.details).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`).join(' | ');
+      } else {
+        errorMsg = String(data.error.details);
+      }
+    } else if (data?.error?.message) {
+      errorMsg = data.error.message;
+    } else if (data?.message) {
+      errorMsg = data.message;
+    } else if (error.message) {
+      errorMsg = error.message;
+    }
     // Don't auto-toast for 404 on roadmap check or initial queries where caller handles it
     if (error.response?.status !== 404) {
       notifyError(errorMsg, 'Skill Service');

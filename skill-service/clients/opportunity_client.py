@@ -63,7 +63,7 @@ class OpportunityClient:
         max_retries: int = 2,
         cold_start_timeout: float = 45.0,
     ):
-        self.base_url = (base_url or os.getenv("OPPORTUNITY_SERVICE_URL", "http://localhost:5002")).rstrip("/")
+        self.base_url = (base_url or os.getenv("OPPORTUNITY_SERVICE_URL", "http://127.0.0.1:5002")).rstrip("/")
         self.service_key = service_key or os.getenv("INTER_SERVICE_KEY")
         
         # Use provided timeout or cloud-friendly defaults: 15s connect, 25s read

@@ -34,10 +34,9 @@ import Skeleton from '../components/ui/Skeleton';
 const TYPE_OPTIONS = [
   { value: 'all', label: 'All Categories' },
   { value: 'internship', label: 'Internships' },
-  { value: 'full_time', label: 'Full-Time' },
+  { value: 'project', label: 'Projects' },
   { value: 'hackathon', label: 'Hackathons' },
-  { value: 'open_source', label: 'Open Source' },
-  { value: 'research', label: 'Research' },
+  { value: 'workshop', label: 'Workshops' },
 ];
 
 export const Opportunities = () => {

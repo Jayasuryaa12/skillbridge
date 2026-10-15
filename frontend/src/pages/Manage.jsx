@@ -116,9 +116,11 @@ export const Manage = () => {
     e.preventDefault();
     try {
       setSaving(true);
+      const defaultGoal = careers.length > 0 ? (careers[0].id || careers[0]._id) : undefined;
       await createStudent({
         ...studentForm,
         year: Number(studentForm.year),
+        career_goal: defaultGoal,
       });
       showToast({ type: 'success', title: 'Student Registered', message: `${studentForm.name} added to Skill Service database.` });
       setIsAddStudentOpen(false);

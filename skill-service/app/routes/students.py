@@ -177,6 +177,21 @@ def delete_student(student_id: str):
 # SKILL SUB-RESOURCE
 # ══════════════════════════════════════════════════════════════════════════════
 
+@students_bp.get("/students/<student_id>/skills")
+def get_student_skills(student_id: str):
+    """GET /api/students/<id>/skills — Retrieve list of verified skills for a student."""
+    if err := _validate_id(student_id, "student ID"):
+        return err
+
+    db = get_db()
+    student = student_service.get_student_by_id(db, student_id)
+    if not student:
+        return error_response("NOT_FOUND", f"Student '{student_id}' not found.", status_code=404)
+
+    skills = student.get("skills", [])
+    return success_response({"skills": skills}, "Skills retrieved successfully")
+
+
 @students_bp.post("/students/<student_id>/skills")
 def add_skill(student_id: str):
     """POST /api/students/<id>/skills — Add or replace a skill."""
@@ -309,11 +324,15 @@ def get_recommendations(student_id: str):
 
     career_id = request.args.get("career_id") or raw_student.get("career_goal")
     if not career_id:
-        return error_response(
-            "MISSING_CAREER",
-            "No career_id provided and student has no career_goal set.",
-            status_code=400,
-        )
+        first_career = db.careers.find_one()
+        if first_career:
+            career_id = str(first_career["_id"])
+        else:
+            return error_response(
+                "MISSING_CAREER",
+                "No career_id provided and student has no career_goal set.",
+                status_code=400,
+            )
 
     if not is_valid_object_id(career_id):
         return error_response("INVALID_ID", f"Invalid career_id: '{career_id}'", status_code=400)
@@ -442,11 +461,16 @@ def get_dashboard(student_id: str):
 
     career_id = request.args.get("career_id") or raw_student.get("career_goal")
     if not career_id:
-        return error_response(
-            "MISSING_CAREER",
-            "No career_id provided and student has no career_goal set.",
-            status_code=400,
-        )
+        # Graceful fallback: pick the first available career track
+        first_career = db.careers.find_one()
+        if first_career:
+            career_id = str(first_career["_id"])
+        else:
+            return error_response(
+                "MISSING_CAREER",
+                "No career tracks exist in the database. Please create a career goal first.",
+                status_code=400,
+            )
 
     if not is_valid_object_id(career_id):
         return error_response("INVALID_ID", f"Invalid career_id: '{career_id}'", status_code=400)
@@ -532,6 +556,10 @@ def get_dashboard(student_id: str):
         },
         "top_priority_skills": gap_result.get("priority_list", [])[:5],
         "roadmap_progress_percentage": roadmap_progress,
+        "roadmap_summary": {
+            "total_stages": len(roadmap.get("stages", [])) if (roadmap and roadmap.get("stages")) else 0,
+            "completed_stages": sum(1 for s in roadmap.get("stages", []) if s.get("status") == "completed") if (roadmap and roadmap.get("stages")) else 0,
+        },
         "top_recommendations": top_recommendations,
         "opportunity_stats": opportunity_stats,
         "opportunity_service": opp_service_status,

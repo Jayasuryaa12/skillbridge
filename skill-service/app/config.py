@@ -36,7 +36,7 @@ class Config:
     CORS_ORIGINS: list[str] = ALLOWED_ORIGINS  # Backwards compatibility
 
     # ── Inter-Service Integration ──────────────────────────────────────────
-    OPPORTUNITY_SERVICE_URL: str = os.getenv("OPPORTUNITY_SERVICE_URL", "http://localhost:5002")
+    OPPORTUNITY_SERVICE_URL: str = os.getenv("OPPORTUNITY_SERVICE_URL", "http://127.0.0.1:5002")
     INTER_SERVICE_KEY: str | None = os.getenv("INTER_SERVICE_KEY", None)
     OPPORTUNITY_CONNECT_TIMEOUT: float = float(os.getenv("OPPORTUNITY_CONNECT_TIMEOUT", "15.0"))
     OPPORTUNITY_READ_TIMEOUT: float = float(os.getenv("OPPORTUNITY_READ_TIMEOUT", "25.0"))
